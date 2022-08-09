@@ -1,0 +1,625 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/faqihassyfa/LesGoo/1.0.0
+info:
+  description: This is a API for Capstone Project
+  version: "1.0.0"
+  title: LesGoo
+  contact:
+    email: faqihassyfa@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: Login
+    description: Endpoint for verifying who a user is
+  - name: Register
+    description: Endpoint for user registration
+  - name: Users
+    description: Endpoint for perform operations on user
+  - name: Groups
+    description: Endpoint for user create groups
+paths:
+#AUTHENTICATION
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Get token for access to account
+      requestBody:
+        $ref: "#/components/requestBodies/requestBodyLogin"
+      responses:
+        "200":
+          $ref: "#/components/responses/loginSuccess"
+        "400":
+          $ref: "#/components/responses/loginFailed"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: internal server error
+#SIGN UP
+  /register:
+    post:
+      tags:
+        - Register
+      summary: Create a new account for customer only
+      requestBody:
+        $ref: "#/components/requestBodies/requestBodyUser"
+      responses:
+        "200":
+          $ref: "#/components/responses/successOperationNonData"
+        "400":
+          $ref: "#/components/responses/createUserFailed"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500 
+                message: internal server error
+#USERS
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get users data (Get Profile)
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/getUserSuccess"
+        "400":
+          $ref: "#/components/responses/getDataByIdFailed"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: internal server error
+    put:
+      tags:
+        - Users
+      summary: Edit users data (Edit Profile)
+      security:
+        - JWTAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/requestBodyUserUpdate"
+      responses:
+        "200":
+          $ref: "#/components/responses/successOperationNonData"
+        "400":
+          $ref: "#/components/responses/updateUserFailed"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: internal server error
+    delete:
+      tags:
+        - Users
+      summary: Delete users (Delete Profile)
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/successOperationNonData"
+        "400":
+          $ref: "#/components/responses/deleteDataByIdFailed"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: internal server error
+#GROUPS
+  /group:
+    post:
+      tags:
+        - Groups
+      summary: Create a new Groups
+      security:
+        - JWTAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/requestBodyAddGroups"
+      responses:
+        "200":
+          $ref: "#/components/responses/creategroupsuccess"
+        "400":
+          $ref: "#/components/responses/createGroupFailed"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: internal server error
+    get:
+      summary: Get My Groups
+      security:
+        - JWTAuth: []
+      tags:
+        - "Groups"
+      responses:
+        "200":
+          description: Get My Groups
+          content:
+            application/json:
+              example:
+                code: 200
+                message: success get my groups
+                data: 
+                  - groups: Road Trip Rinjani
+                  - groups: OTW Pelabuhan Ratu
+
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: internal server error
+  /group/{id}:
+    get:
+      security:
+        - JWTAuth: []
+      tags:
+        - Groups
+      summary: Group Detail, Get Groups by id
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/getGroupsSuccess"
+        "400":
+          $ref: "#/components/responses/getDataByIdFailed"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: internal server error
+    post:
+      tags:
+        - Groups
+      summary: Join Group by id
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      security:
+        - JWTAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/requestBodyJoinGroups"
+      responses:
+        "200":
+          $ref: "#/components/responses/joingroupsuccess"
+        "400":
+          $ref: "#/components/responses/createGroupFailed"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: internal server error
+    delete:
+      tags:
+        - Groups
+      summary: Delete Groups by id
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/successOperationNonData"
+        "400":
+          $ref: "#/components/responses/deleteDataByIdFailed"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: internal server error
+#COMP
+components:
+  schemas:
+    requestDataLogin:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    requestDataUser:
+      type: object
+      required:
+        - username
+        - email
+        - phone
+      properties:
+        username:
+          type: string
+          format: username
+          minLength: 3
+          description: inputted username must be unique
+        email:
+          type: string
+          minLength: 1
+        phone:
+          type: integer
+          minLength: 5
+#COMP - response login
+    responseLoginWithData:
+      type: object
+      properties:
+        code:
+          type: integer
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            token:
+              type: string
+        Message:
+          type: string
+#COMP - response user
+    responseUserWithData:
+      type: object
+      properties:
+        code:
+          type: integer
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            username:
+              type: string
+            phone:
+              type: string
+        message:
+          type: string
+#COMP
+    responseNonData:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    responseCreateGroupsWithData:
+      type: object
+      properties:
+        code:
+          type: integer
+        data:
+          type: object
+          properties:
+            userID:
+              type: integer
+            group_subject:
+              type: string
+            group_description:
+              type: string
+            group_destination:
+              type: string
+        message:
+          type: string
+  parameters:
+    idParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        example: 1
+#requestBody
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "use Token"
+
+#Login
+  requestBodies:
+    requestBodyLogin:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/requestDataLogin"
+          example:
+            username: redfox
+            password: asd123
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/requestDataLogin"
+#Regiser
+    requestBodyUser:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/requestDataUser"
+          examples:
+            newUser:
+              value:
+                username: "redfox"
+                email: "redfox@gmail.com"
+                phone: "08123456789"
+                password: "asd123"
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/requestDataUser"
+    requestBodyUserUpdate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/requestDataUser"
+          examples:
+            newData1:
+              value:
+                username: redfox
+                email: redfox@gmail.com
+                phone: "08123456789"
+        multipart/form-data:
+          schema:
+            $ref: "#/components/schemas/requestDataUser"
+#Groups
+    requestBodyAddGroups:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#"
+          example:
+            group_subject: Trip Rinjani
+            group_description: Road Trip Rinjani
+            group_destination: Bali
+  #Join Groups
+    requestBodyJoinGroups:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#"
+          example:
+            group_id: 1
+#response
+  responses:
+    loginSuccess:
+      description: Success Response Data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseLoginWithData"
+          example:
+            code: 200
+            message: Login Success
+            data:
+              {
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2Mzk2OTAwMjMsInJvbGUiOiJhZG1pbiIsInVzZXJJZCI6NH0.1Ij1ZVqpqPDOVXzaXyqcyNMlnbLTfwD28Byv0aWNjAQ,
+              }
+#Login
+    loginFailed:
+      description: Bad Request Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          example:
+            code: 400
+            message: Username or Password Incorrect
+#Register
+    successOperationNonData:
+      description: Success Response Non Data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          example:
+            code: 200
+            message: Success Operation
+    createUserFailed:
+      description: Bad Request Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            invalid Username:
+              $ref: "#/components/examples/invalidUsername"
+            invalid Email:
+              $ref: "#/components/examples/invalidEmail"
+            invalid Password:
+              $ref: "#/components/examples/invalidPassword"
+            invalid Phone:
+              $ref: "#/components/examples/invalidPhone"
+            username Already Exist:
+              $ref: "#/components/examples/usernameOrPhoneNumberAlreadyExist"
+    creategroupsuccess:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseCreateGroupsWithData"
+          example:
+            code: 200
+            message: Success Create New Groups
+  #JOIN
+    joingroupsuccess:
+      description: Success
+      content:
+        application/json:
+          example:
+            code: 200
+            message: Success Join Group
+#User
+    getUserSuccess:
+      description: Success Response Data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseUserWithData"
+          example:
+            code: 200
+            data: {username: redfox, email: redfox@gmail.com, phone: "08123456789"}
+            message: Success Operation
+    getDataByIdFailed:
+      description: Bad Request Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            invalid Id:
+              $ref: "#/components/examples/invalidId"
+            data Not Found:
+              $ref: "#/components/examples/dataNotFound"
+            bad Request:
+              $ref: "#/components/examples/badRequest"
+    updateUserFailed:
+      description: Bad Request Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            username Already Exist:
+              $ref: "#/components/examples/usernameOrPhoneNumberAlreadyExist"
+    deleteDataByIdFailed:
+      description: Bad Request Response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            access Forbidden:
+              $ref: "#/components/examples/accessForbidden"
+            invalid Id:
+              $ref: "#/components/examples/invalidId"
+            data Not Found:
+              $ref: "#/components/examples/dataNotFound"
+#GROUPS
+    createGroupFailed:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/responseNonData"
+          examples:
+            invalid Param:
+              $ref: "#/components/examples/invalidParam"
+            bad Request:
+              $ref: "#/components/examples/badRequest"
+            access Forbidden:
+              $ref: "#/components/examples/accessForbidden"
+    getGroupsSuccess:
+      description: Success Response Data
+      content:
+        application/json:
+          example:
+            code: 200
+            message: Success
+            data:
+              {
+                group_name: Trip Rinjani,
+                group_id: 1,
+                group_description: Road Trip Rinjani,
+                group_participants: [
+                  {
+                    user_name: redfox,
+                  },
+                  {
+                    user_name: zoro,
+                  },
+                  {
+                    user_name: lutfy,
+                  }],
+                 
+              }
+
+#Example
+  examples:
+#Register
+    usernameOrPhoneNumberAlreadyExist:
+      value:
+        code: 400
+        message: username or Telephone Number Already Exist
+    accessForbidden:
+      value:
+        code: 400
+        message: Access Forbidden
+    invalidPassword:
+      value:
+        code: 400
+        message: Invalid Password
+    invalidId:
+      value:
+        code: 400
+        message: Invalid Id
+    invalidUsername:
+      value:
+        code: 400
+        message: Invalid Username
+    invalidEmail:
+      value:
+        code: 400
+        message: Invalid Email
+    invalidParam:
+      value:
+        code: 400
+        message: Invalid Param
+    invalidTelephoneNumber:
+      value:
+        code: 400
+        message: Invalid Telephone Number
+    invalidPhone:
+      value:
+        code: 400
+        message: Invalid Phone Number
+    dataNotFound:
+      value:
+        code: 400
+        message: Data Not Found
+    badRequest:
+      value:
+        code: 400
+        message: Bad Request
