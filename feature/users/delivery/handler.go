@@ -3,9 +3,11 @@ package delivery
 import (
 	"lesgoobackend/config"
 	"lesgoobackend/domain"
+	"lesgoobackend/feature/common"
 	"lesgoobackend/feature/middlewares"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -19,8 +21,12 @@ func New(e *echo.Echo, us domain.UserUsecase) {
 	handler := &userHandler{
 		userUsecase: us,
 	}
-	_ = middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET)))
+	JWT := middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET)))
 	e.POST("/register", handler.InsertUser())
+	e.POST("/login", handler.LoginHandler())
+	e.PUT("/users", handler.UpdateUser(), JWT)
+	e.GET("/users", handler.GetProfile(), JWT)
+	e.DELETE("/users", handler.DeleteUser(), JWT)
 }
 
 func (uh *userHandler) InsertUser() echo.HandlerFunc {
@@ -45,6 +51,107 @@ func (uh *userHandler) InsertUser() echo.HandlerFunc {
 		return c.JSON(http.StatusCreated, map[string]interface{}{
 			"code":    201,
 			"message": "success operation",
+		})
+	}
+}
+
+func (uh *userHandler) LoginHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var userLogin LoginFormat
+		err := c.Bind(&userLogin)
+		if err != nil {
+			log.Println("Cannot parse data", err)
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": "cannot read input",
+			})
+		}
+		row, data, e := uh.userUsecase.LoginUser(userLogin.LoginToModel())
+		if e != nil {
+			log.Println("Cannot proces data", err)
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": "username or password incorrect",
+			})
+		}
+		if row == -1 {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": "cannot read input",
+			})
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    200,
+			"token":   common.GenerateToken(int(data.ID)),
+			"message": "success login",
+		})
+	}
+}
+
+func (uh *userHandler) UpdateUser() echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		var tmp UpdateFormat
+		result := c.Bind(&tmp)
+		idUpdate := common.ExtractData(c)
+		if result != nil {
+			log.Println(result, "Cannot parse input to object")
+			return c.JSON(http.StatusInternalServerError, "Error read update")
+		}
+
+		_, err := uh.userUsecase.UpdateUser(idUpdate, tmp.UpdateToModel())
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err.Error())
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    200,
+			"message": "success operation",
+		})
+	}
+}
+
+func (uh *userHandler) GetProfile() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := common.ExtractData(c)
+
+		data, err := uh.userUsecase.GetProfile(id)
+
+		if err != nil {
+			if strings.Contains(err.Error(), "not found") {
+				return c.JSON(http.StatusNotFound, map[string]interface{}{
+					"code":    400,
+					"message": "data not found",
+				})
+			} else {
+				return c.JSON(http.StatusInternalServerError, err.Error())
+			}
+		}
+		return c.JSON(http.StatusFound, map[string]interface{}{
+			"code":    200,
+			"message": "Success Operation",
+			"data":    data,
+		})
+	}
+}
+
+func (uh *userHandler) DeleteUser() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := common.ExtractData(c)
+		if id == 0 {
+			return c.JSON(http.StatusUnauthorized, "Unauthorized")
+		}
+		_, errDel := uh.userUsecase.DeleteUser(id)
+		if errDel != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
+				"message": "internal server error",
+			})
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    200,
+			"message": "Success Operation",
 		})
 	}
 }

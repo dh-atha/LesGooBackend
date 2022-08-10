@@ -29,3 +29,13 @@ func FromModel(data domain.User) User {
 	res.Phone = data.Phone
 	return res
 }
+
+func (u *User) ToModel() domain.User {
+	return domain.User{
+		ID:       u.ID,
+		Username: u.Username,
+		Password: u.Password,
+		Email:    u.Email,
+		Phone:    u.Phone,
+	}
+}
