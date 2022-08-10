@@ -23,6 +23,7 @@ type User struct {
 
 func FromModel(data domain.User) User {
 	var res User
+	res.ProfileImg = data.ProfileImg
 	res.Username = data.Username
 	res.Password = data.Password
 	res.Email = data.Email
@@ -32,10 +33,11 @@ func FromModel(data domain.User) User {
 
 func (u *User) ToModel() domain.User {
 	return domain.User{
-		ID:       u.ID,
-		Username: u.Username,
-		Password: u.Password,
-		Email:    u.Email,
-		Phone:    u.Phone,
+		ID:         u.ID,
+		ProfileImg: u.ProfileImg,
+		Username:   u.Username,
+		Password:   u.Password,
+		Email:      u.Email,
+		Phone:      u.Phone,
 	}
 }

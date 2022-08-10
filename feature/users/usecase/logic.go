@@ -59,6 +59,9 @@ func (ud *userUsecase) LoginUser(userLogin domain.User) (response int, data doma
 func (ud *userUsecase) UpdateUser(id int, updateProfile domain.User) (row int, err error) {
 	var tmp delivery.UpdateFormat
 	qry := map[string]interface{}{}
+	if tmp.ProfileImg != "" {
+		qry["profileimg"] = &tmp.ProfileImg
+	}
 	if tmp.Username != "" {
 		qry["username"] = &tmp.Username
 	}

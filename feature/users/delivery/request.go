@@ -31,15 +31,17 @@ func (lf *LoginFormat) LoginToModel() domain.User {
 }
 
 type UpdateFormat struct {
-	Username string `json:"username" form:"username"`
-	Email    string `json:"email" form:"email"`
-	Phone    string `json:"phone" form:"phone"`
+	ProfileImg string `json:"profileimg" form:"profileimg"`
+	Username   string `json:"username" form:"username"`
+	Email      string `json:"email" form:"email"`
+	Phone      string `json:"phone" form:"phone"`
 }
 
 func (uf *UpdateFormat) UpdateToModel() domain.User {
 	return domain.User{
-		Username: uf.Username,
-		Email:    uf.Email,
-		Phone:    uf.Phone,
+		ProfileImg: uf.ProfileImg,
+		Username:   uf.Username,
+		Email:      uf.Email,
+		Phone:      uf.Phone,
 	}
 }
