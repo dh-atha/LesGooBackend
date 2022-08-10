@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/labstack/echo/v4"
+
 type User struct {
 	ID         uint
 	Username   string
@@ -9,6 +11,18 @@ type User struct {
 	ProfileImg string
 }
 
-type UserUsecase interface{}
+type UserHandler interface {
+	InsertUser() echo.HandlerFunc
+	LoginHandler() echo.HandlerFunc
+	UpdateUser() echo.HandlerFunc
+	GetProfile() echo.HandlerFunc
+	DeleteUser() echo.HandlerFunc
+}
 
-type UserData interface{}
+type UserUsecase interface{
+	AddUser(newUser User) (row int, err error)
+}
+
+type UserData interface{
+	Insert(newUser User) (row int, err error)
+}
