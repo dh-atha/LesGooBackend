@@ -9,8 +9,6 @@ type User struct {
 	ProfileImg string
 }
 
-type UserUsecase interface {
-	AddUser()
-}
+type UserUsecase interface{}
 
 type UserData interface{}
