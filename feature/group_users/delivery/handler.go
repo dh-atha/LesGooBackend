@@ -10,7 +10,7 @@ import (
 )
 
 type groupUsersHandler struct {
-	groupUsersUsecase domain.UserUsecase
+	groupUsersUsecase domain.Group_UserUsecase
 }
 
 func New(e *echo.Echo, gus domain.Group_UserUsecase) {
