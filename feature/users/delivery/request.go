@@ -17,3 +17,29 @@ func (i InsertFormat) ToModel() domain.User {
 		Password: i.Password,
 	}
 }
+
+type LoginFormat struct {
+	Username string `json:"username" form:"username"`
+	Password string `json:"password" form:"password"`
+}
+
+func (lf *LoginFormat) LoginToModel() domain.User {
+	return domain.User{
+		Username: lf.Username,
+		Password: lf.Password,
+	}
+}
+
+type UpdateFormat struct {
+	Username string `json:"username" form:"username"`
+	Email    string `json:"email" form:"email"`
+	Phone    string `json:"phone" form:"phone"`
+}
+
+func (uf *UpdateFormat) UpdateToModel() domain.User {
+	return domain.User{
+		Username: uf.Username,
+		Email:    uf.Email,
+		Phone:    uf.Phone,
+	}
+}
