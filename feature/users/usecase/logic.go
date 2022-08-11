@@ -59,7 +59,6 @@ func (ud *userUsecase) AddUser(newUser domain.User) (row int, err error) {
 
 func (ud *userUsecase) LoginUser(userLogin domain.User) (response int, data domain.User, err error) {
 	response, data, err = ud.userData.Login(userLogin)
-
 	return response, data, err
 }
 
@@ -141,4 +140,9 @@ func (ud *userUsecase) UploadFiles(session *session.Session, bucket string, prof
 	}
 
 	return profileImgUrl, nil
+}
+
+func (ud *userUsecase) Logout(userID uint) error {
+	err := ud.userData.Logout(userID)
+	return err
 }

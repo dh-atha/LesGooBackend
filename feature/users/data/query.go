@@ -53,6 +53,12 @@ func (ud *userData) Login(userLogin domain.User) (row int, data domain.User, err
 		return -2, domain.User{}, fmt.Errorf("failed to login")
 	}
 
+	if dataUser.Fcm_Token != "" {
+		return -3, domain.User{}, errors.New("must logout from another device")
+	} else {
+		ud.db.Model(&dataUser).Update("fcm_token", userLogin.Fcm_Token)
+	}
+
 	return int(result.RowsAffected), dataUser.ToModel(), nil
 }
 
@@ -94,4 +100,12 @@ func (ud *userData) Delete(userID int) (row int, err error) {
 		return 0, fmt.Errorf("failed to delete user")
 	}
 	return int(res.RowsAffected), nil
+}
+
+func (ud *userData) Logout(userID uint) error {
+	err := ud.db.Model(&User{}).Where("id = ?", userID).Update("fcm_token", "").Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
