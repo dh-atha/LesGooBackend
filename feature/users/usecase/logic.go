@@ -2,10 +2,17 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	"lesgoobackend/domain"
 	"lesgoobackend/feature/users/delivery"
+	"lesgoobackend/infrastructure/aws/s3"
 	"log"
 
+	"mime/multipart"
+	"strings"
+
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -117,4 +124,21 @@ func (ud *userUsecase) DeleteUser(id int) (row int, err error) {
 		}
 	}
 	return row, nil
+}
+
+func (ud *userUsecase) UploadFiles(session *session.Session, bucket string, profileImg *multipart.FileHeader) (string, error) {
+	log.Println(bucket)
+	profileImgExt := strings.Split(profileImg.Filename, ".")
+	ext := profileImgExt[len(profileImgExt)-1]
+	if ext != "png" && ext != "PNG" && ext != "jpeg" && ext != "JPEG" && ext != "jpg" && ext != "JPG" {
+		return "", errors.New("image not supported, supported: png/jpeg/jpg")
+	}
+
+	destination := fmt.Sprint("images/", uuid.NewString(), "_", profileImg.Filename)
+	profileImgUrl, err := s3.DoUpload(session, *profileImg, bucket, destination)
+	if err != nil {
+		return "", errors.New("cant upload image to s3")
+	}
+
+	return profileImgUrl, nil
 }
