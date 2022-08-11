@@ -27,6 +27,7 @@ func New(e *echo.Echo, us domain.UserUsecase) {
 	JWT := middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET)))
 	e.POST("/register", handler.InsertUser())
 	e.POST("/login", handler.LoginHandler())
+	e.POST("/logout", handler.Logout(), JWT)
 	e.PUT("/users", handler.UpdateUser(), JWT)
 	e.GET("/users", handler.GetProfile(), JWT)
 	e.DELETE("/users", handler.DeleteUser(), JWT)
@@ -69,12 +70,19 @@ func (uh *userHandler) LoginHandler() echo.HandlerFunc {
 				"message": "cannot read input",
 			})
 		}
+		err = validator.New().Struct(userLogin)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": err.Error(),
+			})
+		}
 		row, data, e := uh.userUsecase.LoginUser(userLogin.LoginToModel())
 		if e != nil {
 			log.Println("Cannot proces data", err)
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    400,
-				"message": "username or password incorrect",
+				"message": e.Error(),
 			})
 		}
 		if row == -1 {
@@ -85,8 +93,11 @@ func (uh *userHandler) LoginHandler() echo.HandlerFunc {
 		}
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"code":    200,
-			"token":   common.GenerateToken(int(data.ID)),
 			"message": "success login",
+			"data": map[string]interface{}{
+				"token":     common.GenerateToken(int(data.ID)),
+				"fcm_token": data.Fcm_Token,
+			},
 		})
 	}
 }
@@ -184,6 +195,23 @@ func (uh *userHandler) DeleteUser() echo.HandlerFunc {
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"code":    200,
 			"message": "Success Operation",
+		})
+	}
+}
+
+func (uh *userHandler) Logout() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userID := common.ExtractData(c)
+		err := uh.userUsecase.Logout(uint(userID))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
+				"message": err.Error(),
+			})
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    200,
+			"message": "success logout",
 		})
 	}
 }

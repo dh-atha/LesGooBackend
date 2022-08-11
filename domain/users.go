@@ -33,6 +33,7 @@ type UserUsecase interface {
 	GetProfile(id int) (User, error)
 	DeleteUser(id int) (row int, err error)
 	UploadFiles(session *session.Session, bucket string, profileImg *multipart.FileHeader) (string, error)
+	Logout(id uint) error
 }
 
 type UserData interface {
@@ -41,4 +42,5 @@ type UserData interface {
 	Update(userID int, updatedData User) (row int, err error)
 	GetSpecific(userID int) (User, error)
 	Delete(userID int) (row int, err error)
+	Logout(id uint) error
 }

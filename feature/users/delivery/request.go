@@ -19,14 +19,16 @@ func (i InsertFormat) ToModel() domain.User {
 }
 
 type LoginFormat struct {
-	Username string `json:"username" form:"username"`
-	Password string `json:"password" form:"password"`
+	Username  string `json:"username" form:"username" validate:"required"`
+	Password  string `json:"password" form:"password" validate:"required"`
+	Fcm_Token string `json:"fcm_token" form:"fcm_token" validate:"required"`
 }
 
 func (lf *LoginFormat) LoginToModel() domain.User {
 	return domain.User{
-		Username: lf.Username,
-		Password: lf.Password,
+		Username:  lf.Username,
+		Password:  lf.Password,
+		Fcm_Token: lf.Fcm_Token,
 	}
 }
 
