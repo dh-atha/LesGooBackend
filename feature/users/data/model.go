@@ -15,7 +15,7 @@ type User struct {
 	Email       string
 	Password    string
 	Phone       string
-	ProfileImg  string
+	ProfileImg  string `gorm:"default:https://lesgooproject.s3.ap-southeast-1.amazonaws.com/profileimg/user.png"`
 	Fcm_Token   string
 	Groups      []groupData.Group           `gorm:"foreignKey:Created_By_User_ID"`
 	Group_Users []groupUsersData.Group_User `gorm:"foreignKey:User_ID"`

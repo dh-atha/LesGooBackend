@@ -6,6 +6,6 @@ type Group_User struct {
 	gorm.Model
 	Group_ID  string
 	User_ID   uint
-	Longitude string
-	Latitude  string
+	Longitude float64
+	Latitude  float64
 }
