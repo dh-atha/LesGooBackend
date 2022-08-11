@@ -9,6 +9,7 @@ type User struct {
 	Password   string
 	Phone      string
 	ProfileImg string
+	Fcm_Token  string
 }
 
 type UserHandler interface {
