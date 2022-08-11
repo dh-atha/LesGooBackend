@@ -1,6 +1,12 @@
 package domain
 
-import "github.com/labstack/echo/v4"
+import (
+	"mime/multipart"
+
+	"github.com/labstack/echo/v4"
+
+	"github.com/aws/aws-sdk-go/aws/session"
+)
 
 type User struct {
 	ID         uint
@@ -26,6 +32,7 @@ type UserUsecase interface {
 	UpdateUser(id int, updateProfile User) (row int, err error)
 	GetProfile(id int) (User, error)
 	DeleteUser(id int) (row int, err error)
+	UploadFiles(session *session.Session, bucket string, profileImg *multipart.FileHeader) (string, error)
 }
 
 type UserData interface {
