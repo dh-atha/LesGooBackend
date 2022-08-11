@@ -21,6 +21,8 @@ tags:
     description: Endpoint for perform operations on user
   - name: Groups
     description: Endpoint for user create groups
+  - name: Chats
+    description: Endpoint for user create chats
 paths:
 #AUTHENTICATION
   /login:
@@ -154,33 +156,6 @@ paths:
               example:
                 code: 500
                 message: internal server error
-    get:
-      summary: Get My Groups
-      security:
-        - JWTAuth: []
-      tags:
-        - "Groups"
-      responses:
-        "200":
-          description: Get My Groups
-          content:
-            application/json:
-              example:
-                code: 200
-                message: success get my groups
-                data: 
-                  - groups: Road Trip Rinjani
-                  - groups: OTW Pelabuhan Ratu
-
-        "500":
-          description: Internal server Error
-          content:
-            application/json:
-              schema:
-                type: string
-              example:
-                code: 500
-                message: internal server error
   /group/{id}:
     get:
       security:
@@ -249,7 +224,138 @@ paths:
                 type: string
               example:
                 code: 500
-                message: internal server error
+                message: internal server error/
+  /group/chats:
+    post:
+      security:
+        - JWTAuth: []
+      tags:
+        - "Groups"
+      summary: Get chat + all participant location
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#"
+            example:
+              group_id: asjkdasjkbda
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              example:
+                code: 200
+                message: success get data group chat
+                data: {
+                  id: groupid,
+                  name: groupname,
+                  chats: [
+                    {
+                      id: 1,
+                      message: hola,
+                      user_id: 1,
+                      profileimg: image.png,
+                      username: username,
+                    },
+                    {
+                      id: 2,
+                      message: halo,
+                      user_id: 1,
+                      profileimg: image.png,
+                      username: username,
+                    },
+                  ],
+                  group_users: [
+                    {
+                      id: 1,
+                      latitude: -6.230508,
+                      longitude: 106.525814,
+                      user_id: 1,
+                      username: username,
+                      profileimg: image.png,
+                    },
+                    {
+                      id: 2,
+                      latitude: -6.230508,
+                      longitude: 106.525814,
+                      user_id: 2,
+                      username: username2,
+                      profileimg: image.png,
+                    }
+                  ]
+                }
+  /group/leave:
+    post:
+      security:
+        - JWTAuth: []
+      tags:
+        - "Groups"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#"
+            example:
+              group_id: ajskbdhja
+      summary: Leave group
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              example:
+                code: 200
+                message: ok
+  
+  /chats:
+    post:
+      security:
+        - JWTAuth: []
+      tags:
+        - "Chats"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#"
+            example:
+              group_id: asjhdbashjda
+              message: sahdbsa
+              isSOS: false
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              example:
+                code: 200
+                message: ok
+
+  /locations:
+    post:
+      security:
+        - JWTAuth: []
+      tags:
+        - "Locations"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#"
+            example:
+              group_id: asjhdbashjda
+              latitude: 1.6323423
+              longitude: -98.71357612
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              example:
+                code: 200
+                message: ok
 #COMP
 components:
   schemas:
@@ -370,7 +476,7 @@ components:
         multipart/form-data:
           schema:
             $ref: "#/components/schemas/requestDataLogin"
-#Regiser
+#Register
     requestBodyUser:
       required: true
       content:
@@ -408,13 +514,37 @@ components:
     requestBodyAddGroups:
       required: true
       content:
-        application/json:
+        multipart/form-data:
           schema:
-            $ref: "#"
-          example:
-            group_subject: Trip Rinjani
-            group_description: Road Trip Rinjani
-            group_destination: Bali
+            required:
+              - "name"
+              - "description"
+              - "start_dest"
+              - "final_dest"
+              - "groupimg"
+              - "latitude"
+              - "longitude"
+            type: object
+            properties:
+              name: 
+                type: string
+              description:
+                type: string
+              start_dest:
+                type: string
+              final_dest:
+                type: string
+              start_date:
+                type: string
+              end_date:
+                type: string
+              groupimg:
+                type: object
+              latitude:
+                type: integer
+              longitude:
+                type: integer
+              
   #Join Groups
     requestBodyJoinGroups:
       required: true
@@ -423,7 +553,9 @@ components:
           schema:
             $ref: "#"
           example:
-            group_id: 1
+            group_id: sajdbasjdas
+            latitude: -6.230508
+            longitude: 106.525814
 #response
   responses:
     loginSuccess:
@@ -563,18 +695,24 @@ components:
             message: Success
             data:
               {
-                group_name: Trip Rinjani,
-                group_id: 1,
-                group_description: Road Trip Rinjani,
-                group_participants: [
+                id: 1,
+                name: Trip Rinjani,
+                groupimg: asdjkbsajd.png,
+                start_date: 01/07/2022,
+                end_date: 07/07/2022,
+                description: Road Trip Rinjani,
+                group_users: [
                   {
-                    user_name: redfox,
+                    user_id: 1,
+                    username: redfox,
                   },
                   {
-                    user_name: zoro,
+                    user_id: 2,
+                    username: zoro,
                   },
                   {
-                    user_name: lutfy,
+                    user_id: 3,
+                    username: luffy,
                   }],
                  
               }

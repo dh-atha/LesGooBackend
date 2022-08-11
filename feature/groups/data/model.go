@@ -13,9 +13,12 @@ type Group struct {
 	Created_By_User_ID uint
 	Name               string
 	Description        string
+	Start_Date         string
+	End_Date           string
 	Start_Dest         string
 	Final_Dest         string
 	GroupImg           string
+	Status             string
 	Group_Users        []groupUsersData.Group_User `gorm:"foreignKey:Group_ID"`
 	Chats              []chatsData.Chat            `gorm:"foreignKey:Group_ID"`
 }
