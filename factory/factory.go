@@ -14,6 +14,7 @@ import (
 	userDelivery "lesgoobackend/feature/users/delivery"
 	userUsecase "lesgoobackend/feature/users/usecase"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/gorm"
@@ -27,7 +28,8 @@ func InitFactory(e *echo.Echo, db *gorm.DB) {
 	e.Use(middleware.CORS())
 
 	userData := userData.New(db)
-	userUsecase := userUsecase.New(userData)
+	validator := validator.New()
+	userUsecase := userUsecase.New(userData, validator)
 	userDelivery.New(e, userUsecase)
 
 	groupData := groupData.New(db)

@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -19,11 +20,13 @@ import (
 
 type userUsecase struct {
 	userData domain.UserData
+	validate *validator.Validate
 }
 
-func New(ud domain.UserData) domain.UserUsecase {
+func New(ud domain.UserData, v *validator.Validate) domain.UserUsecase {
 	return &userUsecase{
 		userData: ud,
+		validate: v,
 	}
 }
 
