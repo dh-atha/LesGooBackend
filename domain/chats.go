@@ -11,6 +11,12 @@ type Chat struct {
 	Created_At time.Time
 }
 
-type ChatUsecase interface{}
+type ChatUsecase interface {
+	SendChats(Chat) error
+	SendNotification(Chat) (int, error)
+}
 
-type ChatData interface{}
+type ChatData interface {
+	Insert(Chat) error
+	GetToken(groupID string) []string
+}
