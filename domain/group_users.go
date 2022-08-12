@@ -4,10 +4,13 @@ type Group_User struct {
 	ID        uint
 	Group_ID  string
 	User_ID   uint
-	Longitude string
-	Latitude  string
+	Longitude float64
+	Latitude  float64
+}
+type Group_UserUsecase interface {
+	AddJoined(data Group_User) error
 }
 
-type Group_UserUsecase interface{}
-
-type Group_UserData interface{}
+type Group_UserData interface {
+	Joined(data Group_User) error
+}

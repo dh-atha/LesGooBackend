@@ -3,7 +3,8 @@ package domain
 import "time"
 
 type Group struct {
-	ID                 string
+	ID                 uint
+	GroupID            string
 	Created_By_User_ID uint
 	Name               string
 	Description        string
@@ -13,11 +14,13 @@ type Group struct {
 	Final_Dest         string
 	GroupImg           string
 	Status             string
-	Created_At         time.Time
+	Longitude          float64
+	Latitude           float64
 }
 
 type GroupUsecase interface {
-	// AddGroup() // Add jadiin statusnya active
+	AddGroup(data Group) error
+	AddGroupUser(dataUser Group_User) error
 	// GetGroupDetail()
 	// JoinGroupByID()
 	// DeleteGroupByID() // Delete jadiin statusnya inactive
@@ -26,7 +29,8 @@ type GroupUsecase interface {
 }
 
 type GroupData interface {
-	// Insert()
+	InsertGroup(data Group) error
+	InsertGroupUser(dataUser Group_User) error
 	// GetSpecific()
 	// JoinGroupByID()
 	// Delete()
