@@ -299,6 +299,7 @@ func TestDeleteUser(t *testing.T) {
 // 	usecase := New(&repo, validator.New())
 
 // 	t.Run("cant upload image to s3", func(t *testing.T) {
+// 		repo.On("UploadFiles", mock.Anything, mock.Anything).Return(nil, errors.New("cant upload image to s3")).Once()
 // 		profileImgUrl, err := usecase.UploadFiles(session, "bucket", imageTrueCnv)
 
 // 		assert.NotNil(t, err)
