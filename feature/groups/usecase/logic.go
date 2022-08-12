@@ -13,3 +13,8 @@ func New(gd domain.GroupData) domain.GroupUsecase {
 		groupData: gd,
 	}
 }
+
+func (gu *groupUsecase) GetChatsAndUsersLocation(groupID string) (domain.GetChatsAndUsersLocationResponse, error) {
+	res, err := gu.groupData.GetChatsAndUsersLocation(groupID)
+	return res, err
+}
