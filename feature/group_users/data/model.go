@@ -22,3 +22,10 @@ func fromModelJoin(data domain.Group_User) Group_User {
 		Latitude:  data.Latitude,
 	}
 }
+
+func fromModelLeave(data domain.Group_User) Group_User {
+	return Group_User{
+		User_ID:  data.User_ID,
+		Group_ID: data.Group_ID,
+	}
+}

@@ -21,6 +21,7 @@ func New(e *echo.Echo, gus domain.Group_UserUsecase) {
 	}
 	JWT := middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET)))
 	e.POST("/group/:id", handler.UserJoined(), JWT)
+	e.POST("/group/leave", handler.LeaveGroup(), JWT)
 }
 
 func (gu *groupUsersHandler) UserJoined() echo.HandlerFunc {
@@ -42,6 +43,37 @@ func (gu *groupUsersHandler) UserJoined() echo.HandlerFunc {
 
 		tmp.UserID = uint(id)
 		err := gu.groupUsersUsecase.AddJoined(ToModelJoin(tmp))
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err.Error())
+		}
+
+		return c.JSON(http.StatusCreated, map[string]interface{}{
+			"code":    201,
+			"message": "success operation",
+		})
+
+	}
+}
+
+func (gu *groupUsersHandler) LeaveGroup() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := common.ExtractData(c)
+		if id == -1 {
+			return c.JSON(http.StatusUnauthorized, "Unauthorized")
+		}
+
+		tmp := GroupUsers{}
+
+		errBind := c.Bind(&tmp)
+		if errBind != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
+				"message": "internal server error",
+			})
+		}
+
+		tmp.UserID = uint(id)
+		err := gu.groupUsersUsecase.LeaveGroup(ToModeLeave(tmp))
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}

@@ -17,3 +17,10 @@ func ToModelJoin(data GroupUsers) domain.Group_User {
 		Latitude:  data.Latitude,
 	}
 }
+
+func ToModeLeave(data GroupUsers) domain.Group_User {
+	return domain.Group_User{
+		User_ID:  data.UserID,
+		Group_ID: data.GroupID,
+	}
+}
