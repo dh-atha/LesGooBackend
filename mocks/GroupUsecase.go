@@ -41,6 +41,20 @@ func (_m *GroupUsecase) AddGroupUser(dataUser domain.Group_User) error {
 	return r0
 }
 
+// DeleteGroupByID provides a mock function with given fields: id, id_user
+func (_m *GroupUsecase) DeleteGroupByID(id string, id_user uint) error {
+	ret := _m.Called(id, id_user)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, uint) error); ok {
+		r0 = rf(id, id_user)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetChatsAndUsersLocation provides a mock function with given fields: groupID
 func (_m *GroupUsecase) GetChatsAndUsersLocation(groupID string) (domain.GetChatsAndUsersLocationResponse, error) {
 	ret := _m.Called(groupID)
@@ -55,6 +69,27 @@ func (_m *GroupUsecase) GetChatsAndUsersLocation(groupID string) (domain.GetChat
 	var r1 error
 	if rf, ok := ret.Get(1).(func(string) error); ok {
 		r1 = rf(groupID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetGroupDetail provides a mock function with given fields: id
+func (_m *GroupUsecase) GetGroupDetail(id string) (domain.Group, error) {
+	ret := _m.Called(id)
+
+	var r0 domain.Group
+	if rf, ok := ret.Get(0).(func(string) domain.Group); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Get(0).(domain.Group)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(id)
 	} else {
 		r1 = ret.Error(1)
 	}

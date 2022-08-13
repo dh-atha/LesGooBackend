@@ -27,6 +27,20 @@ func (_m *Group_UserData) Joined(data domain.Group_User) error {
 	return r0
 }
 
+// Leave provides a mock function with given fields: data
+func (_m *Group_UserData) Leave(data domain.Group_User) error {
+	ret := _m.Called(data)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(domain.Group_User) error); ok {
+		r0 = rf(data)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 type mockConstructorTestingTNewGroup_UserData interface {
 	mock.TestingT
 	Cleanup(func())
