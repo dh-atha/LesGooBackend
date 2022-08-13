@@ -26,6 +26,19 @@ func (gd *groupData) GetChatsAndUsersLocation(groupID string) (domain.GetChatsAn
 	return result, nil
 }
 
+// RemoveGroupByID implements domain.GroupData
+func (gd *groupData) RemoveGroupByID(id string, id_user uint) error {
+	dataGroup := Group{}
+
+	res := gd.db.Where("id = ? AND created_by_user_id = ?", id, id_user).Delete(&dataGroup)
+	if res.RowsAffected == 0 || res.Error != nil {
+		return res.Error
+	}
+
+	return nil
+
+}
+
 // SelectSpecific implements domain.GroupData
 func (gd *groupData) SelectSpecific(id string) (domain.Group, error) {
 	dataGroup := Group{}

@@ -20,6 +20,16 @@ func (gu *groupUsecase) GetChatsAndUsersLocation(groupID string) (domain.GetChat
 	return res, err
 }
 
+// DeleteGroupByID implements domain.GroupUsecase
+func (gu *groupUsecase) DeleteGroupByID(id string, id_user uint) error {
+	err := gu.groupData.RemoveGroupByID(id, id_user)
+	if err != nil {
+		return errors.New("failed")
+	}
+
+	return nil
+}
+
 // GetGroupDetail implements domain.GroupUsecase
 func (gu *groupUsecase) GetGroupDetail(id string) (domain.Group, error) {
 	response, err := gu.groupData.SelectSpecific(id)
