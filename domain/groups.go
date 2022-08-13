@@ -29,7 +29,6 @@ type GroupUsecase interface {
 	GetGroupDetail(id string) (Group, error)
 	DeleteGroupByID(id string, id_user uint) error
 	GetChatsAndUsersLocation(groupID string) (GetChatsAndUsersLocationResponse, error)
-	// LeaveGroup()
 }
 
 type GroupData interface {
@@ -39,7 +38,6 @@ type GroupData interface {
 	SelectUserData(id string) ([]UsersbyID, error)
 	RemoveGroupByID(id string, id_user uint) error
 	GetChatsAndUsersLocation(groupID string) (GetChatsAndUsersLocationResponse, error)
-	// Leave()
 }
 
 type GetChatsAndUsersLocationResponse struct {

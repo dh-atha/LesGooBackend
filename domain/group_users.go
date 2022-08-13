@@ -9,8 +9,10 @@ type Group_User struct {
 }
 type Group_UserUsecase interface {
 	AddJoined(data Group_User) error
+	LeaveGroup(data Group_User) error
 }
 
 type Group_UserData interface {
 	Joined(data Group_User) error
+	Leave(data Group_User) error
 }
