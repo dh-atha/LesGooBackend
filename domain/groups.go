@@ -27,9 +27,7 @@ type GroupUsecase interface {
 	AddGroup(data Group) error
 	AddGroupUser(dataUser Group_User) error
 	GetGroupDetail(id string) (Group, error)
-	// GetGroupDetail()
-	// JoinGroupByID()
-	// DeleteGroupByID() // Delete jadiin statusnya inactive
+	DeleteGroupByID(id string, id_user uint) error
 	GetChatsAndUsersLocation(groupID string) (GetChatsAndUsersLocationResponse, error)
 	// LeaveGroup()
 }
@@ -39,8 +37,7 @@ type GroupData interface {
 	InsertGroupUser(dataUser Group_User) error
 	SelectSpecific(id string) (Group, error)
 	SelectUserData(id string) ([]UsersbyID, error)
-	// JoinGroupByID()
-	// Delete()
+	RemoveGroupByID(id string, id_user uint) error
 	GetChatsAndUsersLocation(groupID string) (GetChatsAndUsersLocationResponse, error)
 	// Leave()
 }

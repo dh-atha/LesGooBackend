@@ -25,6 +25,7 @@ func New(e *echo.Echo, gu domain.GroupUsecase) {
 	e.POST("/group/chats", handler.GetChatsAndUsersLocation(), JWT)
 	e.POST("/group", handler.InsertGroup(), JWT)
 	e.GET("/group/:id", handler.GetGroupByID())
+	e.DELETE("/group/:id", handler.DeleteGroupByIDGroup(), JWT)
 }
 
 func (gh *groupHandler) GetChatsAndUsersLocation() echo.HandlerFunc {
@@ -118,7 +119,7 @@ func (gh *groupHandler) InsertGroup() echo.HandlerFunc {
 
 func (gh *groupHandler) GetGroupByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := c.Param("Id")
+		id := c.Param("id")
 		result, err := gh.groupUsecase.GetGroupDetail(id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -133,6 +134,31 @@ func (gh *groupHandler) GetGroupByID() echo.HandlerFunc {
 			"code":    200,
 			"message": "success operation",
 			"data":    response,
+		})
+	}
+}
+
+func (gh *groupHandler) DeleteGroupByIDGroup() echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		id := c.Param("id")
+
+		id_user := common.ExtractData(c)
+		if id_user == -1 {
+			return c.JSON(http.StatusUnauthorized, "Unauthorized")
+		}
+
+		err := gh.groupUsecase.DeleteGroupByID(id, uint(id_user))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
+				"message": "internal server error",
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    200,
+			"message": "success operation",
 		})
 	}
 }
