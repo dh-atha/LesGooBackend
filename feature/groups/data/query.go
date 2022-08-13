@@ -26,6 +26,29 @@ func (gd *groupData) GetChatsAndUsersLocation(groupID string) (domain.GetChatsAn
 	return result, nil
 }
 
+// SelectSpecific implements domain.GroupData
+func (gd *groupData) SelectSpecific(id string) (domain.Group, error) {
+	dataGroup := Group{}
+	result := gd.db.Find(&dataGroup, id)
+	if result.Error != nil {
+		return domain.Group{}, result.Error
+	}
+
+	return toDomainByID(dataGroup), nil
+}
+
+// SelectUserData implements domain.GroupData
+func (gd *groupData) SelectUserData(id string) ([]domain.UsersbyID, error) {
+	dataGroupUsers := []Group_User{}
+
+	result := gd.db.Preload("User").Find(&dataGroupUsers, "group_id", id)
+	if result.Error != nil {
+		return []domain.UsersbyID{}, result.Error
+	}
+
+	return ToUsersDomainList(dataGroupUsers), nil
+}
+
 // InsertGroupUser implements domain.GroupData
 func (gd *groupData) InsertGroupUser(newGroupUser domain.Group_User) error {
 

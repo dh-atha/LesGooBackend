@@ -23,6 +23,8 @@ func New(e *echo.Echo, gu domain.GroupUsecase) {
 	}
 	JWT := middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET)))
 	e.POST("/group/chats", handler.GetChatsAndUsersLocation(), JWT)
+	e.POST("/group", handler.InsertGroup(), JWT)
+	e.GET("/group/:id", handler.GetGroupByID())
 }
 
 func (gh *groupHandler) GetChatsAndUsersLocation() echo.HandlerFunc {
@@ -86,7 +88,7 @@ func (gh *groupHandler) InsertGroup() echo.HandlerFunc {
 			tmp.GroupImg = "Ini file image group"
 		*/
 
-		tmp.GroupID = group_id.String()
+		tmp.ID = group_id.String()
 		tmp.Created_By_User_ID = uint(id)
 
 		err := gh.groupUsecase.AddGroup(ToModelGroup(tmp))
@@ -111,5 +113,26 @@ func (gh *groupHandler) InsertGroup() echo.HandlerFunc {
 			"message": "success operation",
 		})
 
+	}
+}
+
+func (gh *groupHandler) GetGroupByID() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := c.Param("Id")
+		result, err := gh.groupUsecase.GetGroupDetail(id)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
+				"message": "internal server error",
+			})
+		}
+
+		response := FromModelByID(result)
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    200,
+			"message": "success operation",
+			"data":    response,
+		})
 	}
 }
