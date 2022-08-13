@@ -3,8 +3,7 @@ package domain
 import "time"
 
 type Group struct {
-	ID                 uint
-	GroupID            string
+	ID                 string
 	Created_By_User_ID uint
 	Name               string
 	Description        string
@@ -16,11 +15,18 @@ type Group struct {
 	Status             string
 	Longitude          float64
 	Latitude           float64
+	UsersbyID          []UsersbyID
+}
+
+type UsersbyID struct {
+	UserID   uint
+	Username string
 }
 
 type GroupUsecase interface {
 	AddGroup(data Group) error
 	AddGroupUser(dataUser Group_User) error
+	GetGroupDetail(id string) (Group, error)
 	// GetGroupDetail()
 	// JoinGroupByID()
 	// DeleteGroupByID() // Delete jadiin statusnya inactive
@@ -31,7 +37,8 @@ type GroupUsecase interface {
 type GroupData interface {
 	InsertGroup(data Group) error
 	InsertGroupUser(dataUser Group_User) error
-	// GetSpecific()
+	SelectSpecific(id string) (Group, error)
+	SelectUserData(id string) ([]UsersbyID, error)
 	// JoinGroupByID()
 	// Delete()
 	GetChatsAndUsersLocation(groupID string) (GetChatsAndUsersLocationResponse, error)

@@ -20,6 +20,22 @@ func (gu *groupUsecase) GetChatsAndUsersLocation(groupID string) (domain.GetChat
 	return res, err
 }
 
+// GetGroupDetail implements domain.GroupUsecase
+func (gu *groupUsecase) GetGroupDetail(id string) (domain.Group, error) {
+	response, err := gu.groupData.SelectSpecific(id)
+	if err != nil {
+		return domain.Group{}, err
+	}
+
+	responseUser, errUser := gu.groupData.SelectUserData(response.ID)
+	response.UsersbyID = responseUser
+	if errUser != nil {
+		return domain.Group{}, errUser
+	}
+
+	return response, nil
+}
+
 // AddGroupUser implements domain.GroupUsecase
 func (gu *groupUsecase) AddGroupUser(dataUser domain.Group_User) error {
 	if dataUser.Group_ID == "" || dataUser.User_ID == 0 || dataUser.Latitude == 0 || dataUser.Longitude == 0 {

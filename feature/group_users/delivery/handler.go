@@ -40,6 +40,7 @@ func (gu *groupUsersHandler) UserJoined() echo.HandlerFunc {
 			})
 		}
 
+		tmp.UserID = uint(id)
 		err := gu.groupUsersUsecase.AddJoined(ToModelJoin(tmp))
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())

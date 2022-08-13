@@ -7,8 +7,8 @@ type GetChatsAndUsersLocationRequest struct {
 }
 
 type Group struct {
+	ID                 string  `json:"id" form:"id" validate:"required"`
 	Created_By_User_ID uint    `json:"created_by_user_id" form:"created_by_user_id" validate:"required"`
-	GroupID            string  `json:"group_id" form:"group_id" validate:"required"`
 	Name               string  `json:"name" form:"name" validate:"required"`
 	Description        string  `json:"description" form:"description" validate:"required"`
 	Start_Dest         string  `json:"start_dest" form:"start_dest" validate:"required"`
@@ -30,7 +30,7 @@ type GroupUser struct {
 func ToModelGroup(data Group) domain.Group {
 	return domain.Group{
 		Created_By_User_ID: data.Created_By_User_ID,
-		GroupID:            data.GroupID,
+		ID:                 data.ID,
 		Name:               data.Name,
 		Description:        data.Description,
 		Start_Date:         data.Start_Date,
