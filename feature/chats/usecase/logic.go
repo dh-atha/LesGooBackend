@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"lesgoobackend/config"
 	"lesgoobackend/domain"
 	"log"
 
@@ -29,8 +30,10 @@ func (cd *chatData) SendNotification(data domain.Chat) (int, error) {
 	res := cd.chatData.GetToken(data.Group_ID)
 
 	ctx := context.Background()
-	opt := option.WithCredentialsFile("coba.json")
-	app, err := firebase.NewApp(ctx, nil, opt)
+	opt := option.WithCredentialsFile(config.GOOGLE_APPLICATION_CREDENTIALS)
+	app, err := firebase.NewApp(ctx, &firebase.Config{
+		ProjectID: config.ProjectID,
+	}, opt)
 	if err != nil {
 		log.Fatalf("error initializing app: %v\n", err)
 	}
@@ -40,11 +43,13 @@ func (cd *chatData) SendNotification(data domain.Chat) (int, error) {
 		log.Fatalf("error getting Messaging client: %v\n", err)
 	}
 
-	// This registration token comes from the client FCM SDKs.
-	// _ = "eKRB1IDFsdnJwbw-6PMIBD:APA91bHs6BPiLJ6UHNK7tii39xzFc3z9nLnlFus_fwglhsy6LrVIts9At9UrIR9MI7nOOiFlEHfxGD0eM2lE1eLwgLanEqScfjL7h19xv2rAj7rxiKQji1aFH01VAKsc60sgzyHKiepB"
-
-	// See documentation on defining a message payload.
 	message := &messaging.MulticastMessage{
+		// Webpush: &messaging.WebpushConfig{
+		// 	Notification: &messaging.WebpushNotification{
+		// 		Title: data.Group_ID,
+		// 		Body:  data.Message,
+		// 	},
+		// },
 		Notification: &messaging.Notification{
 			Title: data.Group_ID,
 			Body:  data.Message,
@@ -56,12 +61,10 @@ func (cd *chatData) SendNotification(data domain.Chat) (int, error) {
 		Tokens: res,
 	}
 
-	// Send a message to the device corresponding to the provided
-	// registration token.
 	response, err := client.SendMulticast(ctx, message)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	// Response is a message ID string.
+
 	return response.SuccessCount, nil
 }
