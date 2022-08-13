@@ -172,13 +172,7 @@ func TestUpdateUser(t *testing.T) {
 		Email:      "admin@min.com",
 		Phone:      "08123456789",
 	}
-	// outputData := domain.User{
-	// 	ID:       1,
-	// 	Fullname: "Rizuana Nadifatul",
-	// 	Username: "rizunadiva",
-	// 	Phone:    "081936665965",
-	// 	Password: "12345678",
-	// }
+
 	t.Run("Success Update", func(t *testing.T) {
 		repo.On("Update", mock.Anything, mock.Anything).Return(1, nil).Once()
 
@@ -210,8 +204,6 @@ func TestUpdateUser(t *testing.T) {
 		assert.Equal(t, 0, res)
 		repo.AssertExpectations(t)
 	})
-
-	t.Run("Empty ProfileImg", func(t *testing.T) {})
 }
 
 func TestGetProfile(t *testing.T) {
@@ -298,8 +290,8 @@ func TestDeleteUser(t *testing.T) {
 // 	repo := mocks.UserData{}
 // 	usecase := New(&repo, validator.New())
 
-// 	t.Run("cant upload image to s3", func(t *testing.T) {
-// 		repo.On("UploadFiles", mock.Anything, mock.Anything).Return(nil, errors.New("cant upload image to s3")).Once()
+// 	t.Run("", func(t *testing.T) {
+// 		repo.On("UploadFiles", mock.Anything, mock.Anything).Return(nil, errors.New("image not supported, supported: png/jpeg/jpg")).Once()
 // 		profileImgUrl, err := usecase.UploadFiles(session, "bucket", imageTrueCnv)
 
 // 		assert.NotNil(t, err)

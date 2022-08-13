@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestGetChatsAndUsersLocation(t *testing.T) {
@@ -41,6 +42,36 @@ func TestDeleteGroupByID(t *testing.T) {
 
 		err := usecase.DeleteGroupByID("m4nt4p", uint(1))
 		assert.NotNil(t, err)
+		repo.AssertExpectations(t)
+	})
+}
+
+// func TestGetGroupDetail(t *testing.T) {
+// 	t.Run("success operation", func(t *testing.T) {
+// 		repo := mocks.GroupData{}
+// 		usecase := New(&repo)
+// 		successGet := domain.Group{}
+// 		repo.On("SelectSpecific", "m4nt4p").Return(successGet, nil).Once()
+
+// 		response, err := usecase.GetGroupDetail("m4nt4p")
+// 		assert.Nil(t, err)
+// 		assert.Equal(t, successGet, response)
+// 		repo.AssertExpectations(t)
+// 	})
+// }
+
+//TestAddGroup implements domain.GroupUsecase
+func TestAddGroup(t *testing.T) {
+	t.Run("success operation", func(t *testing.T) {
+		repo := mocks.GroupData{}
+		usecase := New(&repo)
+		successAdd := domain.Group{ID: "m4nt4p"}
+		insertAdd := domain.Group{ID: "m4nt4p", Name: "Udin", Description: "Udin"}
+		repo.On("InsertGroup", mock.Anything).Return(nil).Once()
+
+		err := usecase.AddGroup(insertAdd)
+		assert.Nil(t, err)
+		assert.Equal(t, successAdd.ID, insertAdd.ID)
 		repo.AssertExpectations(t)
 	})
 }

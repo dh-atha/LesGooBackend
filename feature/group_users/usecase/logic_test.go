@@ -29,3 +29,24 @@ func TestAddJoined(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
+
+func TestLeaveGroup(t *testing.T) {
+	repo := mocks.Group_UserData{}
+	usecase := New(&repo)
+	successLeave := domain.Group_User{Group_ID: "m4nt4p", User_ID: 1, Longitude: 1.0, Latitude: 1.0}
+	failedLeave := domain.Group_User{Group_ID: "", User_ID: 0, Longitude: 0.0, Latitude: 0.0}
+
+	t.Run("success operation", func(t *testing.T) {
+		repo.On("Leave", successLeave).Return(nil).Once()
+		err := usecase.LeaveGroup(successLeave)
+		assert.Nil(t, err)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("internal server error", func(t *testing.T) {
+		repo.On("Leave", failedLeave).Return(errors.New("failed")).Once()
+		err := usecase.LeaveGroup(failedLeave)
+		assert.NotNil(t, err)
+		repo.AssertExpectations(t)
+	})
+}
