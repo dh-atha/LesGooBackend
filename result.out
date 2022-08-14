@@ -73,11 +73,11 @@ lesgoobackend/feature/users/usecase/logic.go:103.64,106.16 2 1
 lesgoobackend/feature/users/usecase/logic.go:115.2,115.18 1 1
 lesgoobackend/feature/users/usecase/logic.go:106.16,108.36 2 1
 lesgoobackend/feature/users/usecase/logic.go:108.36,110.4 1 1
-lesgoobackend/feature/users/usecase/logic.go:110.9,112.4 1 0
+lesgoobackend/feature/users/usecase/logic.go:110.9,112.4 1 1
 lesgoobackend/feature/users/usecase/logic.go:118.64,120.16 2 1
 lesgoobackend/feature/users/usecase/logic.go:128.2,128.17 1 1
 lesgoobackend/feature/users/usecase/logic.go:120.16,122.36 2 1
-lesgoobackend/feature/users/usecase/logic.go:122.36,124.4 1 0
+lesgoobackend/feature/users/usecase/logic.go:122.36,124.4 1 1
 lesgoobackend/feature/users/usecase/logic.go:124.9,126.4 1 1
 lesgoobackend/feature/users/usecase/logic.go:131.127,135.100 4 0
 lesgoobackend/feature/users/usecase/logic.go:139.2,141.16 3 0
