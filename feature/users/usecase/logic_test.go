@@ -193,15 +193,14 @@ func TestUpdateUser(t *testing.T) {
 		assert.EqualError(t, err, errors.New("username or phone number already exist").Error())
 		repo.AssertExpectations(t)
 	})
-	t.Run("Error from server", func(t *testing.T) {
-		repo.On("Update", mock.Anything, mock.Anything).Return(0, gorm.ErrInvalidValueOfLength).Once()
+	t.Run("Generate Hash Error", func(t *testing.T) {
+		repo.On("Update", mock.Anything, mock.Anything).Return(0, errors.New("error encrypt password")).Once()
 
 		useCase := New(repo, validator.New())
 
-		insertData.Username = "123aoeijakdngnsvbsnzoczbjfakdjfoadijfoangnbcoloijapdfaposdjfpk"
-		res, err := useCase.UpdateUser(int(insertData.ID), insertData)
+		_, err := useCase.UpdateUser(int(insertData.ID), insertData)
 		assert.NotNil(t, err)
-		assert.Equal(t, 0, res)
+		assert.EqualError(t, err, errors.New("error encrypt password").Error())
 		repo.AssertExpectations(t)
 	})
 }
@@ -232,8 +231,18 @@ func TestGetProfile(t *testing.T) {
 		assert.Equal(t, outputData, res)
 		repo.AssertExpectations(t)
 	})
-	t.Run("Get User Failed", func(t *testing.T) {
+	t.Run("Data Not Found", func(t *testing.T) {
 		repo.On("GetSpecific", mock.Anything).Return(domain.User{}, gorm.ErrRecordNotFound).Once()
+
+		useCase := New(repo, validator.New())
+
+		res, err := useCase.GetProfile(int(insertData.ID))
+		assert.NotNil(t, err)
+		assert.Equal(t, domain.User{}, res)
+		repo.AssertExpectations(t)
+	})
+	t.Run("Server Error", func(t *testing.T) {
+		repo.On("GetSpecific", mock.Anything).Return(domain.User{}, errors.New("server error")).Once()
 
 		useCase := New(repo, validator.New())
 
@@ -273,6 +282,16 @@ func TestDeleteUser(t *testing.T) {
 		_, err := useCase.DeleteUser(int(insertData.ID))
 		assert.NotNil(t, err)
 		assert.Equal(t, err, fmt.Errorf("failed to delete user"))
+		repo.AssertExpectations(t)
+	})
+	t.Run("Data Not Found", func(t *testing.T) {
+		repo.On("Delete", mock.Anything).Return(0, gorm.ErrRecordNotFound).Once()
+
+		useCase := New(repo, validator.New())
+
+		_, err := useCase.DeleteUser(int(insertData.ID))
+		assert.NotNil(t, err)
+		assert.Equal(t, err, gorm.ErrRecordNotFound)
 		repo.AssertExpectations(t)
 	})
 }
