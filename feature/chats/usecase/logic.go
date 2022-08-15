@@ -28,7 +28,7 @@ func (cd *chatData) SendChats(data domain.Chat) error {
 
 func (cd *chatData) SendNotification(data domain.Chat) (int, error) {
 	res := cd.chatData.GetToken(data.Group_ID, data.User_ID)
-	log.Println(res)
+	// log.Println(res)
 
 	ctx := context.Background()
 	opt := option.WithCredentialsFile(config.GOOGLE_APPLICATION_CREDENTIALS)
@@ -67,9 +67,9 @@ func (cd *chatData) SendNotification(data domain.Chat) (int, error) {
 		log.Fatalln(err)
 	}
 
-	for i := 0; i < len(response.Responses); i++ {
-		log.Println(response.Responses[i])
-	}
+	// for i := 0; i < len(response.Responses); i++ {
+	// 	log.Println(response.Responses[i])
+	// }
 
 	return response.SuccessCount, nil
 }
