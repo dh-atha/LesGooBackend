@@ -2,17 +2,34 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	"lesgoobackend/domain"
+	"lesgoobackend/infrastructure/aws/s3"
+	"mime/multipart"
+	"strings"
+
+	"github.com/aws/aws-sdk-go/aws/session"
 )
 
 type groupUsecase struct {
 	groupData domain.GroupData
 }
 
-func New(gd domain.GroupData) domain.GroupUsecase {
-	return &groupUsecase{
-		groupData: gd,
+// UploadFiles implements domain.GroupUsecase
+func (gu *groupUsecase) UploadFiles(session *session.Session, bucket string, groupImg *multipart.FileHeader, id_group string) (string, error) {
+	groupImgExt := strings.Split(groupImg.Filename, ".")
+	ext := groupImgExt[len(groupImgExt)-1]
+	if ext != "png" && ext != "PNG" && ext != "jpeg" && ext != "JPEG" && ext != "jpg" && ext != "JPG" {
+		return "", errors.New("image not supported, supported: png/jpeg/jpg")
 	}
+
+	destination := fmt.Sprint("images/", id_group, "_", groupImg.Filename)
+	profileImgUrl, err := s3.DoUpload(session, *groupImg, bucket, destination)
+	if err != nil {
+		return "", errors.New("cant upload image to s3")
+	}
+
+	return profileImgUrl, nil
 }
 
 func (gu *groupUsecase) GetChatsAndUsersLocation(groupID string) (domain.GetChatsAndUsersLocationResponse, error) {
@@ -72,4 +89,10 @@ func (gu *groupUsecase) AddGroup(dataGroup domain.Group) error {
 	}
 
 	return nil
+}
+
+func New(gd domain.GroupData) domain.GroupUsecase {
+	return &groupUsecase{
+		groupData: gd,
+	}
 }
