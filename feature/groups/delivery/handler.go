@@ -7,6 +7,7 @@ import (
 	"lesgoobackend/feature/middlewares"
 	"net/http"
 
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -65,6 +66,8 @@ func (gh *groupHandler) GetChatsAndUsersLocation() echo.HandlerFunc {
 
 func (gh *groupHandler) InsertGroup() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		session := c.Get("session").(*session.Session)
+		bucket := c.Get("bucket").(string)
 
 		id := common.ExtractData(c)
 		if id == -1 {
@@ -84,10 +87,23 @@ func (gh *groupHandler) InsertGroup() echo.HandlerFunc {
 			})
 		}
 
-		/*
-			Code AWS S3 for upload image group
-			tmp.GroupImg = "Ini file image group"
-		*/
+		groupImg, errImg := c.FormFile("groupimg")
+		if errImg != nil {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": errImg.Error(),
+			})
+		}
+
+		groupImgUrl, errImgUrl := gh.groupUsecase.UploadFiles(session, bucket, groupImg, group_id.String())
+		if errImgUrl != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
+				"message": errImgUrl.Error(),
+			})
+		}
+
+		tmp.GroupImg = groupImgUrl
 
 		tmp.ID = group_id.String()
 		tmp.Created_By_User_ID = uint(id)

@@ -1,6 +1,11 @@
 package domain
 
-import "time"
+import (
+	"mime/multipart"
+	"time"
+
+	"github.com/aws/aws-sdk-go/aws/session"
+)
 
 type Group struct {
 	ID                 string
@@ -26,6 +31,7 @@ type GroupUsecase interface {
 	AddGroupUser(dataUser Group_User) error
 	GetGroupDetail(id string) (Group, error)
 	DeleteGroupByID(id string, id_user uint) error
+	UploadFiles(session *session.Session, bucket string, profileImg *multipart.FileHeader, id_group string) (string, error)
 	GetChatsAndUsersLocation(groupID string) (GetChatsAndUsersLocationResponse, error)
 }
 
