@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"lesgoobackend/domain"
+	"lesgoobackend/feature/users/data"
 	"lesgoobackend/feature/users/delivery"
 	"lesgoobackend/infrastructure/aws/s3"
 	"log"
@@ -31,7 +32,7 @@ func New(ud domain.UserData, v *validator.Validate) domain.UserUsecase {
 }
 
 func (ud *userUsecase) AddUser(newUser domain.User) (row int, err error) {
-
+	var tmp = data.FromModel(newUser)
 	if newUser.Username == "" {
 		return -1, errors.New("invalid username")
 	}
@@ -43,6 +44,12 @@ func (ud *userUsecase) AddUser(newUser domain.User) (row int, err error) {
 	}
 	if newUser.Phone == "" {
 		return -1, errors.New("invalid phone number")
+	}
+	log.Println(tmp.ToModel())
+	duplicate := ud.userData.CheckDuplicate(tmp.ToModel())
+	if duplicate {
+		log.Println("Duplicate Data")
+		return -2, errors.New("duplicate data")
 	}
 
 	hashed, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
@@ -84,7 +91,6 @@ func (ud *userUsecase) UpdateUser(id int, updateProfile domain.User) (row int, e
 	if id == -1 {
 		return 0, errors.New("invalid user")
 	}
-
 	hashed, err := bcrypt.GenerateFromPassword([]byte(updateProfile.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println("error encrypt password", err)
