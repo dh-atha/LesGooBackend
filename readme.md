@@ -3,3 +3,5 @@
 ## Members : Atha Dhaiffathin & Faqih Assyfa
 
 ## Tech Stack
+
+-   Go
