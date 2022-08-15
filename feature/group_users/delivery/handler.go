@@ -20,7 +20,7 @@ func New(e *echo.Echo, gus domain.Group_UserUsecase) {
 		groupUsersUsecase: gus,
 	}
 	JWT := middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET)))
-	e.POST("/group/:id", handler.UserJoined(), JWT)
+	e.POST("/group/join", handler.UserJoined(), JWT)
 	e.POST("/group/leave", handler.LeaveGroup(), JWT)
 }
 

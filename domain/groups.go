@@ -13,8 +13,6 @@ type Group struct {
 	Final_Dest         string
 	GroupImg           string
 	Status             string
-	Longitude          float64
-	Latitude           float64
 	UsersbyID          []UsersbyID
 }
 

@@ -38,8 +38,6 @@ func ToModelGroup(data Group) domain.Group {
 		Start_Dest:         data.Start_Dest,
 		Final_Dest:         data.Final_Dest,
 		GroupImg:           data.GroupImg,
-		Longitude:          data.Longitude,
-		Latitude:           data.Latitude,
 	}
 }
 

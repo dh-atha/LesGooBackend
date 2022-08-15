@@ -27,7 +27,8 @@ func (cd *chatData) SendChats(data domain.Chat) error {
 }
 
 func (cd *chatData) SendNotification(data domain.Chat) (int, error) {
-	res := cd.chatData.GetToken(data.Group_ID)
+	res := cd.chatData.GetToken(data.Group_ID, data.User_ID)
+	log.Println(res)
 
 	ctx := context.Background()
 	opt := option.WithCredentialsFile(config.GOOGLE_APPLICATION_CREDENTIALS)
@@ -44,12 +45,12 @@ func (cd *chatData) SendNotification(data domain.Chat) (int, error) {
 	}
 
 	message := &messaging.MulticastMessage{
-		// Webpush: &messaging.WebpushConfig{
-		// 	Notification: &messaging.WebpushNotification{
-		// 		Title: data.Group_ID,
-		// 		Body:  data.Message,
-		// 	},
-		// },
+		Webpush: &messaging.WebpushConfig{
+			Notification: &messaging.WebpushNotification{
+				Title: data.Group_ID,
+				Body:  data.Message,
+			},
+		},
 		Notification: &messaging.Notification{
 			Title: data.Group_ID,
 			Body:  data.Message,
@@ -64,6 +65,10 @@ func (cd *chatData) SendNotification(data domain.Chat) (int, error) {
 	response, err := client.SendMulticast(ctx, message)
 	if err != nil {
 		log.Fatalln(err)
+	}
+
+	for i := 0; i < len(response.Responses); i++ {
+		log.Println(response.Responses[i])
 	}
 
 	return response.SuccessCount, nil

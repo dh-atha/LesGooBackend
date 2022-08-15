@@ -18,5 +18,5 @@ type ChatUsecase interface {
 
 type ChatData interface {
 	Insert(Chat) error
-	GetToken(groupID string) []string
+	GetToken(groupID string, userID uint) []string
 }

@@ -13,13 +13,13 @@ type ChatData struct {
 	mock.Mock
 }
 
-// GetToken provides a mock function with given fields: groupID
-func (_m *ChatData) GetToken(groupID string) []string {
-	ret := _m.Called(groupID)
+// GetToken provides a mock function with given fields: groupID, userID
+func (_m *ChatData) GetToken(groupID string, userID uint) []string {
+	ret := _m.Called(groupID, userID)
 
 	var r0 []string
-	if rf, ok := ret.Get(0).(func(string) []string); ok {
-		r0 = rf(groupID)
+	if rf, ok := ret.Get(0).(func(string, uint) []string); ok {
+		r0 = rf(groupID, userID)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]string)

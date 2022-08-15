@@ -62,7 +62,7 @@ func (gu *groupUsecase) AddGroupUser(dataUser domain.Group_User) error {
 
 // AddGroup implements domain.GroupUsecase
 func (gu *groupUsecase) AddGroup(dataGroup domain.Group) error {
-	if dataGroup.Name == "" || dataGroup.Description == "" || dataGroup.Start_Dest == "" || dataGroup.Final_Dest == "" || dataGroup.Latitude == 0 || dataGroup.Longitude == 0 {
+	if dataGroup.Name == "" || dataGroup.Description == "" || dataGroup.Start_Dest == "" || dataGroup.Final_Dest == "" {
 		return nil
 	}
 
