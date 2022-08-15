@@ -110,8 +110,9 @@ func (gh *groupHandler) InsertGroup() echo.HandlerFunc {
 		}
 
 		return c.JSON(http.StatusCreated, map[string]interface{}{
-			"code":    201,
-			"message": "success operation",
+			"code":     201,
+			"message":  "success operation",
+			"id_group": tmp.ID,
 		})
 
 	}
