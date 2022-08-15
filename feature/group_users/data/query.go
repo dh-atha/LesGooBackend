@@ -4,12 +4,19 @@ import (
 	"errors"
 	"lesgoobackend/domain"
 	"log"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type groupUsersData struct {
 	db *gorm.DB
+}
+
+func New(db *gorm.DB) domain.Group_UserData {
+	return &groupUsersData{
+		db: db,
+	}
 }
 
 // Leave implements domain.Group_UserData
@@ -38,11 +45,20 @@ func (gu *groupUsersData) Joined(newJoined domain.Group_User) error {
 	}
 
 	return nil
-
 }
 
-func New(db *gorm.DB) domain.Group_UserData {
-	return &groupUsersData{
-		db: db,
+func (gud *groupUsersData) Update(data domain.Group_User) error {
+	var get Group_User
+	err := gud.db.Where("user_id = ? AND group_id = ?", data.User_ID, data.Group_ID).First(&get).Error
+	if err != nil {
+		return err
 	}
+	err = gud.db.Model(&Group_User{}).Where("id = ?", get.ID).Updates(&data).Update("updated_at", time.Now()).Error
+	return err
+}
+
+func (gud *groupUsersData) GetToken(groupID string, userID uint) []string {
+	var res []string
+	gud.db.Raw("SELECT fcm_token FROM users WHERE id in (SELECT user_id FROM group_users WHERE group_id = ? AND user_id != ?)", groupID, userID).Scan(&res)
+	return res
 }
