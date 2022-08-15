@@ -41,6 +41,7 @@ type GroupData interface {
 type GetChatsAndUsersLocationResponse struct {
 	Group_ID    string                    `json:"group_id" form:"group_id"`
 	Name        string                    `json:"name" form:"name"`
+	Status      string                    `json:"status" form:"status"`
 	Chats       []JoinChatsWithUsers      `json:"chats" form:"chats"`
 	Group_Users []JoinGroupUsersWithUsers `json:"group_users" form:"group_users"`
 }
