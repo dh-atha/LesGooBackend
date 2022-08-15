@@ -51,7 +51,7 @@ paths:
     post:
       security:
         - JWTAuth: []
-      summary: logout (make fcm_token null is users table)
+      summary: logout (make fcm_token null in users table)
       tags:
         - "Logout"
       responses:
@@ -213,30 +213,6 @@ paths:
               example:
                 code: 500
                 message: internal server error
-    post:
-      tags:
-        - Groups
-      summary: Join Group by id
-      parameters:
-        - $ref: "#/components/parameters/idParam"
-      security:
-        - JWTAuth: []
-      requestBody:
-        $ref: "#/components/requestBodies/requestBodyJoinGroups"
-      responses:
-        "200":
-          $ref: "#/components/responses/joingroupsuccess"
-        "400":
-          $ref: "#/components/responses/createGroupFailed"
-        "500":
-          description: Internal server Error
-          content:
-            application/json:
-              schema:
-                type: string
-              example:
-                code: 500
-                message: internal server error
     delete:
       tags:
         - Groups
@@ -259,6 +235,29 @@ paths:
               example:
                 code: 500
                 message: internal server error/
+  /group/join:
+    post:
+      tags:
+        - Groups
+      summary: Join Group
+      security:
+        - JWTAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/requestBodyJoinGroups"
+      responses:
+        "200":
+          $ref: "#/components/responses/joingroupsuccess"
+        "400":
+          $ref: "#/components/responses/createGroupFailed"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: internal server error
   /group/chats:
     post:
       security:
@@ -284,6 +283,7 @@ paths:
                 data: {
                   id: groupid,
                   name: groupname,
+                  status: active,
                   chats: [
                     {
                       id: 1,
@@ -402,22 +402,17 @@ components:
           type: string
     requestDataUser:
       type: object
-      required:
-        - username
-        - email
-        - phone
       properties:
         username:
           type: string
-          format: username
-          minLength: 3
-          description: inputted username must be unique
         email:
           type: string
           minLength: 1
         phone:
           type: integer
           minLength: 5
+        profileimg:
+          type: object
 #COMP - response login
     responseLoginWithData:
       type: object
@@ -531,16 +526,6 @@ components:
     requestBodyUserUpdate:
       required: true
       content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/requestDataUser"
-          examples:
-            newData1:
-              value:
-                profileimg: jav.png
-                username: redfox
-                email: redfox@gmail.com
-                phone: "08123456789"
         multipart/form-data:
           schema:
             $ref: "#/components/schemas/requestDataUser"
@@ -556,6 +541,8 @@ components:
               - "start_dest"
               - "final_dest"
               - "groupimg"
+              - "start_date"
+              - "end_date"
               - "latitude"
               - "longitude"
             type: object
