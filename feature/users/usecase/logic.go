@@ -155,3 +155,8 @@ func (ud *userUsecase) Logout(userID uint) error {
 	err := ud.userData.Logout(userID)
 	return err
 }
+
+func (ud *userUsecase) GetGroupID(data domain.User) string {
+	groupID := ud.userData.GetGroupID(data)
+	return groupID
+}

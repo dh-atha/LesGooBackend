@@ -93,12 +93,16 @@ func (uh *userHandler) LoginHandler() echo.HandlerFunc {
 				"message": "cannot read input",
 			})
 		}
+
+		groupID := uh.userUsecase.GetGroupID(data)
+
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"code":    200,
 			"message": "success login",
 			"data": map[string]interface{}{
 				"token":     common.GenerateToken(int(data.ID)),
 				"fcm_token": data.Fcm_Token,
+				"group_id":  groupID,
 			},
 		})
 	}

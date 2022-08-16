@@ -592,6 +592,7 @@ components:
               {
                 fcm_token: asdasd,
                 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2Mzk2OTAwMjMsInJvbGUiOiJhZG1pbiIsInVzZXJJZCI6NH0.1Ij1ZVqpqPDOVXzaXyqcyNMlnbLTfwD28Byv0aWNjAQ,
+                group_id: asdsa
               }
 #Login
     loginFailed:

@@ -34,6 +34,7 @@ type UserUsecase interface {
 	DeleteUser(id int) (row int, err error)
 	UploadFiles(session *session.Session, bucket string, profileImg *multipart.FileHeader) (string, error)
 	Logout(id uint) error
+	GetGroupID(data User) string
 }
 
 type UserData interface {
@@ -44,4 +45,5 @@ type UserData interface {
 	Delete(userID int) (row int, err error)
 	Logout(id uint) error
 	CheckDuplicate(newuser User) bool
+	GetGroupID(data User) string
 }
