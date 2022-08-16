@@ -13,6 +13,22 @@ type Group_UserData struct {
 	mock.Mock
 }
 
+// GetToken provides a mock function with given fields: groupID, userID
+func (_m *Group_UserData) GetToken(groupID string, userID uint) []string {
+	ret := _m.Called(groupID, userID)
+
+	var r0 []string
+	if rf, ok := ret.Get(0).(func(string, uint) []string); ok {
+		r0 = rf(groupID, userID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	return r0
+}
+
 // Joined provides a mock function with given fields: data
 func (_m *Group_UserData) Joined(data domain.Group_User) error {
 	ret := _m.Called(data)
@@ -29,6 +45,20 @@ func (_m *Group_UserData) Joined(data domain.Group_User) error {
 
 // Leave provides a mock function with given fields: data
 func (_m *Group_UserData) Leave(data domain.Group_User) error {
+	ret := _m.Called(data)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(domain.Group_User) error); ok {
+		r0 = rf(data)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// Update provides a mock function with given fields: data
+func (_m *Group_UserData) Update(data domain.Group_User) error {
 	ret := _m.Called(data)
 
 	var r0 error
