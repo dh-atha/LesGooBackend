@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-playground/validator/v10"
 
 	"github.com/labstack/echo/v4"
@@ -110,22 +111,36 @@ func (uh *userHandler) LoginHandler() echo.HandlerFunc {
 
 func (uh *userHandler) UpdateUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := common.ExtractData(c)
+		session := c.Get("session").(*session.Session)
+		bucket := c.Get("bucket").(string)
 		var tmp UpdateFormat
 		err := c.Bind(&tmp)
+		id := common.ExtractData(c)
 		if err != nil {
 			log.Println("Cannot parse data", err)
-			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"code":    500,
-				"message": "internal server error",
-			})
-		}
-		err = validator.New().Struct(tmp)
-		if err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    400,
-				"message": err.Error(),
+				"message": "wrong input",
 			})
+		}
+		fileData, err := c.FormFile("profileimg")
+		if fileData != nil {
+			if err == http.ErrMissingFile || err != nil {
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{
+					"code":    400,
+					"message": err.Error(),
+				})
+			}
+			url, err := uh.userUsecase.UploadFiles(session, bucket, fileData)
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+					"code":    500,
+					"message": err.Error(),
+				})
+			}
+			tmp.ProfileImg = url
+		} else {
+			tmp.ProfileImg = ""
 		}
 		data, err := uh.userUsecase.UpdateUser(id, tmp.UpdateToModel())
 		if err != nil {

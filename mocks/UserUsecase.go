@@ -59,6 +59,20 @@ func (_m *UserUsecase) DeleteUser(id int) (int, error) {
 	return r0, r1
 }
 
+// GetGroupID provides a mock function with given fields: data
+func (_m *UserUsecase) GetGroupID(data domain.User) string {
+	ret := _m.Called(data)
+
+	var r0 string
+	if rf, ok := ret.Get(0).(func(domain.User) string); ok {
+		r0 = rf(data)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	return r0
+}
+
 // GetProfile provides a mock function with given fields: id
 func (_m *UserUsecase) GetProfile(id int) (domain.User, error) {
 	ret := _m.Called(id)
