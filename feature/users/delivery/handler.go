@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-playground/validator/v10"
 
 	"github.com/labstack/echo/v4"
@@ -107,53 +106,35 @@ func (uh *userHandler) LoginHandler() echo.HandlerFunc {
 
 func (uh *userHandler) UpdateUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		session := c.Get("session").(*session.Session)
-		bucket := c.Get("bucket").(string)
-
+		id := common.ExtractData(c)
 		var tmp UpdateFormat
 		err := c.Bind(&tmp)
-		idUpdate := common.ExtractData(c)
 		if err != nil {
-			log.Println(err, "Cannot parse input to object")
-			return c.JSON(http.StatusInternalServerError, "Error read update")
+			log.Println("Cannot parse data", err)
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
+				"message": "internal server error",
+			})
 		}
 		err = validator.New().Struct(tmp)
 		if err != nil {
-			log.Println(err)
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    400,
 				"message": err.Error(),
 			})
 		}
-
-		profileImg, err := c.FormFile("profileimg")
+		data, err := uh.userUsecase.UpdateUser(id, tmp.UpdateToModel())
 		if err != nil {
+			log.Println("Cannot proces data", err)
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    400,
-				"message": err.Error(),
-			})
-
-		}
-		profileImgUrl, err := uh.userUsecase.UploadFiles(session, bucket, profileImg)
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"code":    500,
-				"message": err.Error(),
+				"message": "Invalid Username",
+				"data":    data,
 			})
 		}
-		tmp.ProfileImg = profileImgUrl
-
-		log.Println(err)
-		data, err := uh.userUsecase.UpdateUser(idUpdate, tmp.UpdateToModel())
-
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, err.Error())
-		}
-
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"code":    200,
 			"message": "success operation",
-			"data":    data,
 		})
 	}
 }
