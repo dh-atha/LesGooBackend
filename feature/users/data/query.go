@@ -121,3 +121,9 @@ func (ud *userData) CheckDuplicate(newUser domain.User) bool {
 
 	return false
 }
+
+func (ud *userData) GetGroupID(data domain.User) string {
+	var result string
+	ud.db.Raw("SELECT group_id FROM group_users WHERE deleted_at is NULL AND user_id = ?", data.ID).Scan(&result)
+	return result
+}
