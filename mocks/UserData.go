@@ -48,6 +48,20 @@ func (_m *UserData) Delete(userID int) (int, error) {
 	return r0, r1
 }
 
+// GetGroupID provides a mock function with given fields: data
+func (_m *UserData) GetGroupID(data domain.User) string {
+	ret := _m.Called(data)
+
+	var r0 string
+	if rf, ok := ret.Get(0).(func(domain.User) string); ok {
+		r0 = rf(data)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	return r0
+}
+
 // GetSpecific provides a mock function with given fields: userID
 func (_m *UserData) GetSpecific(userID int) (domain.User, error) {
 	ret := _m.Called(userID)
