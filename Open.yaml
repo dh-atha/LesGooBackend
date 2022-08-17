@@ -11,7 +11,7 @@ info:
     email: faqihassyfa@gmail.com
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
   - name: Login
     description: Endpoint for verifying who a user is
@@ -25,7 +25,7 @@ tags:
   - name: Chats
     description: Endpoint for user create chats
 paths:
-#AUTHENTICATION
+  #AUTHENTICATION
   /login:
     post:
       tags:
@@ -80,7 +80,7 @@ paths:
               example:
                 code: 500
                 message: internal server error
-#SIGN UP
+  #SIGN UP
   /register:
     post:
       tags:
@@ -100,9 +100,9 @@ paths:
               schema:
                 type: string
               example:
-                code: 500 
+                code: 500
                 message: internal server error
-#USERS
+  #USERS
   /users:
     get:
       tags:
@@ -166,7 +166,7 @@ paths:
               example:
                 code: 500
                 message: internal server error
-#GROUPS
+  #GROUPS
   /group:
     post:
       tags:
@@ -177,7 +177,7 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/requestBodyAddGroups"
       responses:
-        "200":
+        "201":
           $ref: "#/components/responses/creategroupsuccess"
         "400":
           $ref: "#/components/responses/createGroupFailed"
@@ -189,7 +189,7 @@ paths:
                 type: string
               example:
                 code: 500
-                message: internal server error
+                message: Internal Server Error
   /group/{id}:
     get:
       security:
@@ -204,15 +204,15 @@ paths:
           $ref: "#/components/responses/getGroupsSuccess"
         "400":
           $ref: "#/components/responses/getDataByIdFailed"
-        "500":
-          description: Internal server Error
-          content:
-            application/json:
-              schema:
-                type: string
-              example:
-                code: 500
-                message: internal server error
+        # "500":
+        #   description: Internal server Error
+        #   content:
+        #     application/json:
+        #       schema:
+        #         type: string
+        #       example:
+        #         code: 500
+        #         message: internal server error
     delete:
       tags:
         - Groups
@@ -280,45 +280,48 @@ paths:
               example:
                 code: 200
                 message: success get data group chat
-                data: {
-                  id: groupid,
-                  name: groupname,
-                  status: active,
-                  chats: [
-                    {
-                      id: 1,
-                      message: hola,
-                      user_id: 1,
-                      profileimg: image.png,
-                      username: username,
-                    },
-                    {
-                      id: 2,
-                      message: halo,
-                      user_id: 1,
-                      profileimg: image.png,
-                      username: username,
-                    },
-                  ],
-                  group_users: [
-                    {
-                      id: 1,
-                      latitude: -6.230508,
-                      longitude: 106.525814,
-                      user_id: 1,
-                      username: username,
-                      profileimg: image.png,
-                    },
-                    {
-                      id: 2,
-                      latitude: -6.230508,
-                      longitude: 106.525814,
-                      user_id: 2,
-                      username: username2,
-                      profileimg: image.png,
-                    }
-                  ]
-                }
+                data:
+                  {
+                    id: groupid,
+                    name: groupname,
+                    status: active,
+                    chats:
+                      [
+                        {
+                          id: 1,
+                          message: hola,
+                          user_id: 1,
+                          profileimg: image.png,
+                          username: username,
+                        },
+                        {
+                          id: 2,
+                          message: halo,
+                          user_id: 1,
+                          profileimg: image.png,
+                          username: username,
+                        },
+                      ],
+                    group_users:
+                      [
+                        {
+                          id: 1,
+                          latitude: -6.230508,
+                          longitude: 106.525814,
+                          user_id: 1,
+                          username: username,
+                          profileimg: image.png,
+                        },
+                        {
+                          id: 2,
+                          latitude: -6.230508,
+                          longitude: 106.525814,
+                          user_id: 2,
+                          username: username2,
+                          profileimg: image.png,
+                        },
+                      ],
+                  }
   /group/leave:
     post:
       security:
@@ -342,7 +345,18 @@ paths:
               example:
                 code: 200
                 message: ok
-  
+        "400":
+          $ref: "#/components/responses/createGroupFailed"
+        "500":
+          description: Internal server Error
+          content:
+            application/json:
+              schema:
+                type: string
+              example:
+                code: 500
+                message: Internal Server Error
+
   /chats:
     post:
       security:
@@ -413,7 +427,7 @@ components:
           minLength: 5
         profileimg:
           type: object
-#COMP - response login
+    #COMP - response login
     responseLoginWithData:
       type: object
       properties:
@@ -430,7 +444,7 @@ components:
               type: string
         Message:
           type: string
-#COMP - response user
+    #COMP - response user
     responseUserWithData:
       type: object
       properties:
@@ -449,7 +463,7 @@ components:
               type: string
         message:
           type: string
-#COMP
+    #COMP
     responseNonData:
       type: object
       properties:
@@ -483,7 +497,7 @@ components:
       schema:
         type: integer
         example: 1
-#requestBody
+  #requestBody
   securitySchemes:
     JWTAuth:
       type: http
@@ -491,7 +505,7 @@ components:
       bearerFormat: JWT
       description: "use Token"
 
-#Login
+  #Login
   requestBodies:
     requestBodyLogin:
       required: true
@@ -506,7 +520,7 @@ components:
         multipart/form-data:
           schema:
             $ref: "#/components/schemas/requestDataLogin"
-#Register
+    #Register
     requestBodyUser:
       required: true
       content:
@@ -529,7 +543,7 @@ components:
         multipart/form-data:
           schema:
             $ref: "#/components/schemas/requestDataUser"
-#Groups
+    #Groups
     requestBodyAddGroups:
       required: true
       content:
@@ -547,7 +561,7 @@ components:
               - "longitude"
             type: object
             properties:
-              name: 
+              name:
                 type: string
               description:
                 type: string
@@ -565,8 +579,8 @@ components:
                 type: integer
               longitude:
                 type: integer
-              
-  #Join Groups
+
+    #Join Groups
     requestBodyJoinGroups:
       required: true
       content:
@@ -577,7 +591,7 @@ components:
             group_id: sajdbasjdas
             latitude: -6.230508
             longitude: 106.525814
-#response
+  #response
   responses:
     loginSuccess:
       description: Success Response Data
@@ -592,9 +606,9 @@ components:
               {
                 fcm_token: asdasd,
                 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2Mzk2OTAwMjMsInJvbGUiOiJhZG1pbiIsInVzZXJJZCI6NH0.1Ij1ZVqpqPDOVXzaXyqcyNMlnbLTfwD28Byv0aWNjAQ,
-                group_id: asdsa
+                group_id: asdsa,
               }
-#Login
+    #Login
     loginFailed:
       description: Bad Request Response
       content:
@@ -604,7 +618,7 @@ components:
           example:
             code: 400
             message: Username or Password Incorrect
-#Register
+    #Register
     successOperationNonData:
       description: Success Response Non Data
       content:
@@ -638,9 +652,9 @@ components:
           schema:
             $ref: "#/components/schemas/responseCreateGroupsWithData"
           example:
-            code: 200
+            code: 201
             message: Success Create New Groups
-  #JOIN
+    #JOIN
     joingroupsuccess:
       description: Success
       content:
@@ -648,7 +662,7 @@ components:
           example:
             code: 200
             message: Success Join Group
-#User
+    #User
     getUserSuccess:
       description: Success Response Data
       content:
@@ -657,7 +671,13 @@ components:
             $ref: "#/components/schemas/responseUserWithData"
           example:
             code: 200
-            data: {profileimg: jav.png, username: redfox, email: redfox@gmail.com, phone: "08123456789"}
+            data:
+              {
+                profileimg: jav.png,
+                username: redfox,
+                email: redfox@gmail.com,
+                phone: "08123456789",
+              }
             message: Success Operation
     getDataByIdFailed:
       description: Bad Request Response
@@ -694,7 +714,7 @@ components:
               $ref: "#/components/examples/invalidId"
             data Not Found:
               $ref: "#/components/examples/dataNotFound"
-#GROUPS
+    #GROUPS
     createGroupFailed:
       description: Bad Request
       content:
@@ -702,10 +722,10 @@ components:
           schema:
             $ref: "#/components/schemas/responseNonData"
           examples:
-            invalid Param:
-              $ref: "#/components/examples/invalidParam"
             bad Request:
               $ref: "#/components/examples/badRequest"
+            invalid Param:
+              $ref: "#/components/examples/invalidParam"
             access Forbidden:
               $ref: "#/components/examples/accessForbidden"
     getGroupsSuccess:
@@ -723,32 +743,24 @@ components:
                 start_date: 01/07/2022,
                 end_date: 07/07/2022,
                 description: Road Trip Rinjani,
-                group_users: [
-                  {
-                    user_id: 1,
-                    username: redfox,
-                  },
-                  {
-                    user_id: 2,
-                    username: zoro,
-                  },
-                  {
-                    user_id: 3,
-                    username: luffy,
-                  }],
-                 
+                group_users:
+                  [
+                    { user_id: 1, username: redfox },
+                    { user_id: 2, username: zoro },
+                    { user_id: 3, username: luffy },
+                  ],
               }
 
-#Example
+  #Example
   examples:
-#Register
+    #Register
     usernameOrPhoneNumberAlreadyExist:
       value:
         code: 400
         message: username or Telephone Number Already Exist
     accessForbidden:
       value:
-        code: 400
+        code: 403
         message: Access Forbidden
     invalidPassword:
       value:
