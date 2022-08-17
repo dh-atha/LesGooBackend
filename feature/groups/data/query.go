@@ -2,6 +2,7 @@ package data
 
 import (
 	"errors"
+	"fmt"
 	"lesgoobackend/domain"
 
 	"gorm.io/gorm"
@@ -27,10 +28,10 @@ func (gd *groupData) GetChatsAndUsersLocation(groupID string) (domain.GetChatsAn
 }
 
 // RemoveGroupByID implements domain.GroupData
-func (gd *groupData) RemoveGroupByID(id string, id_user uint) error {
+func (gd *groupData) RemoveGroupByID(id_user uint) error {
 	dataGroup := Group{}
 
-	res := gd.db.Where("id = ? AND created_by_user_id = ?", id, id_user).Delete(&dataGroup)
+	res := gd.db.Where("created_by_user_id = ?", id_user).Delete(&dataGroup)
 	if res.RowsAffected == 0 || res.Error != nil {
 		return res.Error
 	}
@@ -87,6 +88,12 @@ func (gd *groupData) InsertGroup(newGroup domain.Group) error {
 
 	cnv := fromModelGroup(newGroup)
 
+	var count int64
+	check := gd.db.Model(&Group{}).Where("created_by_user_id = ?", newGroup.Created_By_User_ID).Count(&count)
+	if check.Error != nil || count == 1 {
+		return errors.New("failed create new group")
+	}
+
 	result := gd.db.Create(&cnv)
 
 	if result.Error != nil {
@@ -96,6 +103,8 @@ func (gd *groupData) InsertGroup(newGroup domain.Group) error {
 	if result.RowsAffected == 0 {
 		return errors.New("failed insert data")
 	}
+
+	fmt.Println("RowsAffected:", result.RowsAffected)
 
 	return nil
 }
