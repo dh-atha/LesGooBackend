@@ -54,3 +54,23 @@ func SendChat(data domain.Chat, tokens []string, client *messaging.Client, conte
 	response, err := client.SendMulticast(context, message)
 	return response, err
 }
+
+func SendLocation(tokens []string, client *messaging.Client, context context.Context) (*messaging.BatchResponse, error) {
+	message := &messaging.MulticastMessage{
+		Webpush: &messaging.WebpushConfig{
+			Data: map[string]string{
+				"action": "location",
+			},
+		},
+		Data: map[string]string{
+			"action": "location",
+		},
+		Tokens: tokens,
+	}
+
+	response, err := client.SendMulticast(context, message)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return response, err
+}
