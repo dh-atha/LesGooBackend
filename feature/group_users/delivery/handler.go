@@ -1,12 +1,14 @@
 package delivery
 
 import (
+	"context"
 	"lesgoobackend/config"
 	"lesgoobackend/domain"
 	"lesgoobackend/feature/common"
 	"lesgoobackend/feature/middlewares"
 	"net/http"
 
+	"firebase.google.com/go/messaging"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -96,6 +98,9 @@ func (gu *groupUsersHandler) LeaveGroup() echo.HandlerFunc {
 
 func (gu *groupUsersHandler) UpdateLocation() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		FCMClient := c.Get("FCM").(*messaging.Client)
+		context := c.Get("context").(context.Context)
+
 		var req GroupUsers
 		err := c.Bind(&req)
 		if err != nil {
@@ -115,7 +120,7 @@ func (gu *groupUsersHandler) UpdateLocation() echo.HandlerFunc {
 
 		req.UserID = uint(common.ExtractData(c))
 
-		err = gu.groupUsersUsecase.UpdateLocation(ToModelJoin(req))
+		err = gu.groupUsersUsecase.UpdateLocation(ToModelJoin(req), FCMClient, context)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 				"code":    500,
