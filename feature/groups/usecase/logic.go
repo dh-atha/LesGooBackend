@@ -51,13 +51,13 @@ func (gu *groupUsecase) DeleteGroupByID(id string, id_user uint) error {
 func (gu *groupUsecase) GetGroupDetail(id string) (domain.Group, error) {
 	response, err := gu.groupData.SelectSpecific(id)
 	if err != nil {
-		return domain.Group{}, err
+		return domain.Group{}, errors.New("failed")
 	}
 
 	responseUser, errUser := gu.groupData.SelectUserData(response.ID)
 	response.UsersbyID = responseUser
 	if errUser != nil {
-		return domain.Group{}, errUser
+		return domain.Group{}, errors.New("failed")
 	}
 
 	return response, nil
@@ -79,13 +79,13 @@ func (gu *groupUsecase) AddGroupUser(dataUser domain.Group_User) error {
 
 // AddGroup implements domain.GroupUsecase
 func (gu *groupUsecase) AddGroup(dataGroup domain.Group) error {
-	if dataGroup.Name == "" || dataGroup.Description == "" || dataGroup.Start_Dest == "" || dataGroup.Final_Dest == "" {
-		return nil
+	if dataGroup.Name == "" || dataGroup.Description == "" || dataGroup.Start_Dest == "" || dataGroup.Final_Dest == "" || dataGroup.GroupImg == "" {
+		return errors.New("failed")
 	}
 
 	err := gu.groupData.InsertGroup(dataGroup)
 	if err != nil {
-		return nil
+		return errors.New("failed")
 	}
 
 	return nil

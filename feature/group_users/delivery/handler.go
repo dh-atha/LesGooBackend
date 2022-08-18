@@ -37,21 +37,24 @@ func (gu *groupUsersHandler) UserJoined() echo.HandlerFunc {
 		errBind := c.Bind(&tmp)
 
 		if errBind != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"code":    500,
-				"message": "internal server error",
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    http.StatusBadRequest,
+				"message": "Bad Request",
 			})
 		}
 
 		tmp.UserID = uint(id)
 		err := gu.groupUsersUsecase.AddJoined(ToModelJoin(tmp))
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    http.StatusInternalServerError,
+				"message": "Internal Server Error",
+			})
 		}
 
-		return c.JSON(http.StatusCreated, map[string]interface{}{
-			"code":    201,
-			"message": "success operation",
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    http.StatusOK,
+			"message": "Success Join Group",
 		})
 
 	}
@@ -68,21 +71,24 @@ func (gu *groupUsersHandler) LeaveGroup() echo.HandlerFunc {
 
 		errBind := c.Bind(&tmp)
 		if errBind != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"code":    500,
-				"message": "internal server error",
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    http.StatusBadRequest,
+				"message": "Bad Request",
 			})
 		}
 
 		tmp.UserID = uint(id)
 		err := gu.groupUsersUsecase.LeaveGroup(ToModeLeave(tmp))
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, err.Error())
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    http.StatusInternalServerError,
+				"message": "Internal Server Error",
+			})
 		}
 
-		return c.JSON(http.StatusCreated, map[string]interface{}{
-			"code":    201,
-			"message": "success operation",
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    http.StatusOK,
+			"message": "ok",
 		})
 
 	}
