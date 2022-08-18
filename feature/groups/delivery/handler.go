@@ -6,8 +6,8 @@ import (
 	"lesgoobackend/feature/common"
 	"lesgoobackend/feature/middlewares"
 	"net/http"
+	"strconv"
 
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -66,8 +66,8 @@ func (gh *groupHandler) GetChatsAndUsersLocation() echo.HandlerFunc {
 
 func (gh *groupHandler) InsertGroup() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		session := c.Get("session").(*session.Session)
-		bucket := c.Get("bucket").(string)
+		// session := c.Get("session").(*session.Session)
+		// bucket := c.Get("bucket").(string)
 
 		id := common.ExtractData(c)
 		if id == -1 {
@@ -87,23 +87,23 @@ func (gh *groupHandler) InsertGroup() echo.HandlerFunc {
 			})
 		}
 
-		groupImg, errImg := c.FormFile("groupimg")
-		if errImg != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"code":    http.StatusBadRequest,
-				"message": "Bad Request",
-			})
-		}
+		// groupImg, errImg := c.FormFile("groupimg")
+		// if errImg != nil {
+		// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
+		// 		"code":    http.StatusBadRequest,
+		// 		"message": "Bad Request",
+		// 	})
+		// }
 
-		groupImgUrl, errImgUrl := gh.groupUsecase.UploadFiles(session, bucket, groupImg, group_id.String())
-		if errImgUrl != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"code":    http.StatusInternalServerError,
-				"message": "Internal Server Error",
-			})
-		}
+		// groupImgUrl, errImgUrl := gh.groupUsecase.UploadFiles(session, bucket, groupImg, group_id.String())
+		// if errImgUrl != nil {
+		// 	return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+		// 		"code":    http.StatusInternalServerError,
+		// 		"message": "Internal Server Error",
+		// 	})
+		// }
 
-		tmp.GroupImg = groupImgUrl
+		tmp.GroupImg = "This is a image file"
 
 		tmp.ID = group_id.String()
 		tmp.Created_By_User_ID = uint(id)
@@ -165,13 +165,17 @@ func (gh *groupHandler) DeleteGroupByIDGroup() echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		id := c.Param("id")
+		id_group, errParam := strconv.Atoi(id)
+		if errParam != nil {
+			return c.JSON(http.StatusBadRequest, "Invalid Param")
+		}
 
 		id_user := common.ExtractData(c)
 		if id_user == -1 {
 			return c.JSON(http.StatusForbidden, "Access Forbidden")
 		}
 
-		err := gh.groupUsecase.DeleteGroupByID(id, uint(id_user))
+		err := gh.groupUsecase.DeleteGroupByID(uint(id_group))
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 				"code":    http.StatusInternalServerError,
