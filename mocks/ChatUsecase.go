@@ -3,7 +3,10 @@
 package mocks
 
 import (
+	context "context"
 	domain "lesgoobackend/domain"
+
+	messaging "firebase.google.com/go/messaging"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -27,20 +30,20 @@ func (_m *ChatUsecase) SendChats(_a0 domain.Chat) error {
 	return r0
 }
 
-// SendNotification provides a mock function with given fields: _a0
-func (_m *ChatUsecase) SendNotification(_a0 domain.Chat) (int, error) {
-	ret := _m.Called(_a0)
+// SendNotification provides a mock function with given fields: _a0, _a1, _a2
+func (_m *ChatUsecase) SendNotification(_a0 domain.Chat, _a1 *messaging.Client, _a2 context.Context) (int, error) {
+	ret := _m.Called(_a0, _a1, _a2)
 
 	var r0 int
-	if rf, ok := ret.Get(0).(func(domain.Chat) int); ok {
-		r0 = rf(_a0)
+	if rf, ok := ret.Get(0).(func(domain.Chat, *messaging.Client, context.Context) int); ok {
+		r0 = rf(_a0, _a1, _a2)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(domain.Chat) error); ok {
-		r1 = rf(_a0)
+	if rf, ok := ret.Get(1).(func(domain.Chat, *messaging.Client, context.Context) error); ok {
+		r1 = rf(_a0, _a1, _a2)
 	} else {
 		r1 = ret.Error(1)
 	}

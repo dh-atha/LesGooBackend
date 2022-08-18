@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"context"
+	"fmt"
 	"lesgoobackend/config"
 	"lesgoobackend/domain"
 	"log"
@@ -27,12 +28,14 @@ func InitFirebaseClient(ctx context.Context) *messaging.Client {
 	return client
 }
 
-func SendChat(data domain.Chat, tokens []string, client *messaging.Client, context context.Context) (*messaging.BatchResponse, error) {
+func SendChat(data domain.Chat, tokens []string, client *messaging.Client, context context.Context, userData domain.User) (*messaging.BatchResponse, error) {
 	message := &messaging.MulticastMessage{
 		Webpush: &messaging.WebpushConfig{
 			Notification: &messaging.WebpushNotification{
-				Title: data.Group_ID,
+				Title: userData.Username,
 				Body:  data.Message,
+				Icon:  userData.ProfileImg,
+				Image: userData.ProfileImg,
 			},
 			Data: map[string]string{
 				"action": "chat",
@@ -40,13 +43,6 @@ func SendChat(data domain.Chat, tokens []string, client *messaging.Client, conte
 			FcmOptions: &messaging.WebpushFcmOptions{
 				Link: "https://google.com",
 			},
-		},
-		Notification: &messaging.Notification{
-			Title: data.Group_ID,
-			Body:  data.Message,
-		},
-		Data: map[string]string{
-			"action": "chat",
 		},
 		Tokens: tokens,
 	}
@@ -72,5 +68,29 @@ func SendLocation(tokens []string, client *messaging.Client, context context.Con
 	if err != nil {
 		log.Fatalln(err)
 	}
+	return response, err
+}
+
+func SendSOS(data domain.Chat, tokens []string, client *messaging.Client, context context.Context, userData domain.User) (*messaging.BatchResponse, error) {
+	message := &messaging.MulticastMessage{
+		Webpush: &messaging.WebpushConfig{
+			Notification: &messaging.WebpushNotification{
+				Title:              fmt.Sprint("SOS by: ", userData.Username),
+				Body:               data.Message,
+				Icon:               userData.ProfileImg,
+				Image:              userData.ProfileImg,
+				RequireInteraction: true,
+			},
+			Data: map[string]string{
+				"action": "sos",
+			},
+			FcmOptions: &messaging.WebpushFcmOptions{
+				Link: "https://google.com",
+			},
+		},
+		Tokens: tokens,
+	}
+
+	response, err := client.SendMulticast(context, message)
 	return response, err
 }

@@ -29,6 +29,27 @@ func (_m *ChatData) GetToken(groupID string, userID uint) []string {
 	return r0
 }
 
+// GetUserData provides a mock function with given fields: userID
+func (_m *ChatData) GetUserData(userID uint) (domain.User, error) {
+	ret := _m.Called(userID)
+
+	var r0 domain.User
+	if rf, ok := ret.Get(0).(func(uint) domain.User); ok {
+		r0 = rf(userID)
+	} else {
+		r0 = ret.Get(0).(domain.User)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(uint) error); ok {
+		r1 = rf(userID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Insert provides a mock function with given fields: _a0
 func (_m *ChatData) Insert(_a0 domain.Chat) error {
 	ret := _m.Called(_a0)
