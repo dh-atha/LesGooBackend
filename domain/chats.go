@@ -1,6 +1,11 @@
 package domain
 
-import "time"
+import (
+	"context"
+	"time"
+
+	"firebase.google.com/go/messaging"
+)
 
 type Chat struct {
 	ID         uint
@@ -13,7 +18,7 @@ type Chat struct {
 
 type ChatUsecase interface {
 	SendChats(Chat) error
-	SendNotification(Chat) (int, error)
+	SendNotification(Chat, *messaging.Client, context.Context) (int, error)
 }
 
 type ChatData interface {

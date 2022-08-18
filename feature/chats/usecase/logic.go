@@ -2,13 +2,13 @@ package usecase
 
 import (
 	"context"
-	"lesgoobackend/config"
+	"errors"
 	"lesgoobackend/domain"
 	"log"
 
-	firebase "firebase.google.com/go"
+	fcm "lesgoobackend/infrastructure/firebase/messaging"
+
 	"firebase.google.com/go/messaging"
-	"google.golang.org/api/option"
 )
 
 type chatData struct {
@@ -26,50 +26,12 @@ func (cd *chatData) SendChats(data domain.Chat) error {
 	return err
 }
 
-func (cd *chatData) SendNotification(data domain.Chat) (int, error) {
-	res := cd.chatData.GetToken(data.Group_ID, data.User_ID)
-	// log.Println(res)
-
-	ctx := context.Background()
-	opt := option.WithCredentialsFile(config.GOOGLE_APPLICATION_CREDENTIALS)
-	app, err := firebase.NewApp(ctx, &firebase.Config{
-		ProjectID: config.ProjectID,
-	}, opt)
-	if err != nil {
-		log.Fatalf("error initializing app: %v\n", err)
+func (cd *chatData) SendNotification(data domain.Chat, client *messaging.Client, ctx context.Context) (int, error) {
+	tokens := cd.chatData.GetToken(data.Group_ID, data.User_ID)
+	log.Println(tokens)
+	if len(tokens) < 1 {
+		return 0, errors.New("notification not sent")
 	}
-
-	client, err := app.Messaging(ctx)
-	if err != nil {
-		log.Fatalf("error getting Messaging client: %v\n", err)
-	}
-
-	message := &messaging.MulticastMessage{
-		Webpush: &messaging.WebpushConfig{
-			Notification: &messaging.WebpushNotification{
-				Title: data.Group_ID,
-				Body:  data.Message,
-			},
-		},
-		Notification: &messaging.Notification{
-			Title: data.Group_ID,
-			Body:  data.Message,
-		},
-		Data: map[string]string{
-			"score": "850",
-			"time":  "2:45",
-		},
-		Tokens: res,
-	}
-
-	response, err := client.SendMulticast(ctx, message)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	// for i := 0; i < len(response.Responses); i++ {
-	// 	log.Println(response.Responses[i])
-	// }
-
+	response, _ := fcm.SendChat(data, tokens, client, ctx)
 	return response.SuccessCount, nil
 }

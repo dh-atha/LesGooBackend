@@ -1,6 +1,7 @@
 package delivery
 
 import (
+	"context"
 	"lesgoobackend/config"
 	"lesgoobackend/domain"
 	"lesgoobackend/feature/common"
@@ -8,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"firebase.google.com/go/messaging"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -25,6 +27,9 @@ func New(e *echo.Echo, cu domain.ChatUsecase) {
 
 func (ch *chatHandler) SendChats() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		FCMClient := c.Get("FCM").(*messaging.Client)
+		context := c.Get("context").(context.Context)
+
 		var chatRequest SendChatRequest
 		err := c.Bind(&chatRequest)
 		if err != nil {
@@ -53,7 +58,7 @@ func (ch *chatHandler) SendChats() echo.HandlerFunc {
 			})
 		}
 
-		response, err := ch.chatHandler.SendNotification(data)
+		response, err := ch.chatHandler.SendNotification(data, FCMClient, context)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 				"code":    500,
