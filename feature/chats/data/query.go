@@ -27,6 +27,6 @@ func (cd *chatData) Insert(data domain.Chat) error {
 
 func (cd *chatData) GetToken(groupID string, userID uint) []string {
 	var res []string
-	cd.db.Raw("SELECT fcm_token FROM users WHERE id in (SELECT user_id FROM group_users WHERE group_id = ? AND user_id != ?)", groupID, userID).Scan(&res)
+	cd.db.Raw("SELECT fcm_token FROM users WHERE id != ? AND id in (SELECT user_id FROM group_users WHERE deleted_at is null AND group_id = ?);", userID, groupID).Scan(&res)
 	return res
 }
