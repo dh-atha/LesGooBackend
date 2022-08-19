@@ -142,13 +142,13 @@ Several commands make use of Locations features, as shown below.
        
   Reach me:
 
-  [![GitHub](https://img.shields.io/badge/Cindy05-shintia-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/faza-muttaqien)
+  [![GitHub](https://img.shields.io/badge/faza-muttaqien-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/faza-muttaqien)
 
 - Atha Dhaiffathin
        
   Reach me:
 
-  [![GitHub](https://img.shields.io/badge/vaniliacahya-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dh-atha)
+  [![GitHub](https://img.shields.io/badge/dh-atha-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dh-atha)
   
 - Faqih Assyfa Poedjiono
        
