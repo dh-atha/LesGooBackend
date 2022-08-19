@@ -85,7 +85,7 @@ func (gu *groupUsecase) AddGroup(dataGroup domain.Group) error {
 
 	err := gu.groupData.InsertGroup(dataGroup)
 	if err != nil {
-		return errors.New("failed")
+		return err
 	}
 
 	return nil

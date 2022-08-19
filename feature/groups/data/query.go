@@ -21,7 +21,7 @@ func New(db *gorm.DB) domain.GroupData {
 func (gd *groupData) GetChatsAndUsersLocation(groupID string) (domain.GetChatsAndUsersLocationResponse, error) {
 	var result domain.GetChatsAndUsersLocationResponse
 	result.Group_ID = groupID
-	gd.db.Raw("SELECT id, name, status FROM groups WHERE id = ?", groupID).Scan(&result)
+	gd.db.Raw("SELECT id, name, status, start_dest, final_dest FROM groups WHERE id = ?", groupID).Scan(&result)
 	gd.db.Raw("SELECT c.id, c.message, c.user_id, u.profile_img, u.username, c.created_at FROM chats c INNER JOIN users u ON u.id = c.user_id WHERE c.is_sos = false AND c.deleted_at is NULL AND group_id = ?", groupID).Scan(&result.Chats)
 	gd.db.Raw("SELECT g.id, g.latitude, g.longitude, g.user_id, g.user_id, u.username, u.profile_img FROM group_users g INNER JOIN users u ON u.id = g.user_id WHERE g.deleted_at is NULL AND group_id = ?", groupID).Scan(&result.Group_Users)
 	return result, nil
@@ -45,7 +45,13 @@ func (gd *groupData) RemoveGroupByID(groupID string, userID uint) error {
 	if err != nil {
 		return err
 	}
+
 	gd.db.Delete(&dataGroup)
+
+	// Delete data from group_users table
+	var groupUsersData Group_User
+	gd.db.Model(&groupUsersData).Where("group_id = ? AND user_id = ?", groupID, userID).Delete(&groupUsersData)
+
 	return nil
 
 }
@@ -98,10 +104,10 @@ func (gd *groupData) InsertGroup(newGroup domain.Group) error {
 
 	cnv := fromModelGroup(newGroup)
 
-	var count int64
-	check := gd.db.Model(&Group{}).Where("created_by_user_id = ?", newGroup.Created_By_User_ID).Count(&count)
-	if check.Error != nil || count == 1 {
-		return errors.New("failed create new group")
+	var groupUsersData Group_User
+	res := gd.db.Where("user_id = ?", newGroup.Created_By_User_ID).Find(&groupUsersData)
+	if res.RowsAffected != 0 {
+		return errors.New("cant create group when you are in a group")
 	}
 
 	result := gd.db.Create(&cnv)

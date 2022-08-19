@@ -285,6 +285,8 @@ paths:
                     id: groupid,
                     name: groupname,
                     status: active,
+                    start_dest: "lat,lng",
+                    final_dest: "lat,lng",
                     chats:
                       [
                         {

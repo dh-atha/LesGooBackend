@@ -34,6 +34,13 @@ func (gu *groupUsersData) Leave(data domain.Group_User) error {
 
 // JoinGroupByID implements domain.Group_UserData
 func (gu *groupUsersData) Joined(newJoined domain.Group_User) error {
+	// verify that user not joined any group yet
+	var groupUsersData Group_User
+	res := gu.db.Where("user_id = ?", newJoined.User_ID).Find(&groupUsersData)
+	if res.RowsAffected != 0 {
+		return errors.New("cant join group when you are in a group")
+	}
+
 	cnv := fromModelJoin(newJoined)
 	result := gu.db.Create(&cnv)
 	if result.Error != nil {

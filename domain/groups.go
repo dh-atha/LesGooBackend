@@ -48,6 +48,8 @@ type GetChatsAndUsersLocationResponse struct {
 	Group_ID    string                    `json:"group_id" form:"group_id"`
 	Name        string                    `json:"name" form:"name"`
 	Status      string                    `json:"status" form:"status"`
+	Start_Dest  string                    `json:"start_dest" form:"start_dest"`
+	Final_Dest  string                    `json:"final_dest" form:"final_dest"`
 	Chats       []JoinChatsWithUsers      `json:"chats" form:"chats"`
 	Group_Users []JoinGroupUsersWithUsers `json:"group_users" form:"group_users"`
 }
