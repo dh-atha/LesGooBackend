@@ -39,3 +39,5 @@ jobs:
           script: |
             cd project
             docker-compose down --rmi all --remove-orphans && docker-compose up -d --remove-orphans
+            ./google.sh
+
