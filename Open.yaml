@@ -285,6 +285,8 @@ paths:
                     id: groupid,
                     name: groupname,
                     status: active,
+                    start_dest: "lat,lng",
+                    final_dest: "lat,lng",
                     chats:
                       [
                         {
@@ -653,6 +655,7 @@ components:
             $ref: "#/components/schemas/responseCreateGroupsWithData"
           example:
             code: 201
+            group_id: asdbjhasdbhas
             message: Success Create New Groups
     #JOIN
     joingroupsuccess:

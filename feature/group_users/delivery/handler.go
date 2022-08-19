@@ -37,16 +37,23 @@ func (gu *groupUsersHandler) UserJoined() echo.HandlerFunc {
 
 		tmp := GroupUsers{}
 		errBind := c.Bind(&tmp)
-
 		if errBind != nil {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    http.StatusBadRequest,
-				"message": "Bad Request",
+				"message": errBind.Error(),
+			})
+		}
+
+		err := validator.New().Struct(tmp)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    http.StatusBadRequest,
+				"message": err.Error(),
 			})
 		}
 
 		tmp.UserID = uint(id)
-		err := gu.groupUsersUsecase.AddJoined(ToModelJoin(tmp))
+		err = gu.groupUsersUsecase.AddJoined(ToModelJoin(tmp))
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 				"code":    http.StatusInternalServerError,

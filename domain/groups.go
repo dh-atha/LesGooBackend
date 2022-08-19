@@ -30,7 +30,7 @@ type GroupUsecase interface {
 	AddGroup(data Group) error
 	AddGroupUser(dataUser Group_User) error
 	GetGroupDetail(id string) (Group, error)
-	DeleteGroupByID(id_user uint) error
+	DeleteGroupByID(groupID string, userID uint) error
 	UploadFiles(session *session.Session, bucket string, profileImg *multipart.FileHeader, id_group string) (string, error)
 	GetChatsAndUsersLocation(groupID string) (GetChatsAndUsersLocationResponse, error)
 }
@@ -40,7 +40,7 @@ type GroupData interface {
 	InsertGroupUser(dataUser Group_User) error
 	SelectSpecific(id string) (Group, error)
 	SelectUserData(id string) ([]UsersbyID, error)
-	RemoveGroupByID(id_user uint) error
+	RemoveGroupByID(groupID string, userID uint) error
 	GetChatsAndUsersLocation(groupID string) (GetChatsAndUsersLocationResponse, error)
 }
 
@@ -48,6 +48,8 @@ type GetChatsAndUsersLocationResponse struct {
 	Group_ID    string                    `json:"group_id" form:"group_id"`
 	Name        string                    `json:"name" form:"name"`
 	Status      string                    `json:"status" form:"status"`
+	Start_Dest  string                    `json:"start_dest" form:"start_dest"`
+	Final_Dest  string                    `json:"final_dest" form:"final_dest"`
 	Chats       []JoinChatsWithUsers      `json:"chats" form:"chats"`
 	Group_Users []JoinGroupUsersWithUsers `json:"group_users" form:"group_users"`
 }
