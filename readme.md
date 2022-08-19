@@ -30,13 +30,13 @@ LesGoo is a real-time location tracker with a chatting feature. The author's des
 Clone the project
 
 ```bash
-  git clone https://github.com/faqihassyfa/PROJECT-III.git
+  git clone https://github.com/dh-atha/LesGooBackend
 ```
 
 Go to the project directory
 
 ```bash
-  cd PROJECT-III
+  cd LesGooBackend
 ```
 
 ## Open Api 🔥
