@@ -23,10 +23,10 @@ func (gu *groupUsecase) UploadFiles(session *session.Session, bucket string, gro
 		return "", errors.New("image not supported, supported: png/jpeg/jpg")
 	}
 
-	destination := fmt.Sprint("images/", id_group, "_", groupImg.Filename)
+	destination := fmt.Sprint("groupimg/", id_group, "_", groupImg.Filename)
 	profileImgUrl, err := s3.DoUpload(session, *groupImg, bucket, destination)
 	if err != nil {
-		return "", errors.New("cant upload image to s3")
+		return "", errors.New("cant upload group image to s3")
 	}
 
 	return profileImgUrl, nil
@@ -38,10 +38,10 @@ func (gu *groupUsecase) GetChatsAndUsersLocation(groupID string) (domain.GetChat
 }
 
 // DeleteGroupByID implements domain.GroupUsecase
-func (gu *groupUsecase) DeleteGroupByID(id_user uint) error {
-	err := gu.groupData.RemoveGroupByID(id_user)
+func (gu *groupUsecase) DeleteGroupByID(groupID string, userID uint) error {
+	err := gu.groupData.RemoveGroupByID(groupID, userID)
 	if err != nil {
-		return errors.New("failed")
+		return err
 	}
 
 	return nil

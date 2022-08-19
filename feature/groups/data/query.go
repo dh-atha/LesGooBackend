@@ -28,14 +28,24 @@ func (gd *groupData) GetChatsAndUsersLocation(groupID string) (domain.GetChatsAn
 }
 
 // RemoveGroupByID implements domain.GroupData
-func (gd *groupData) RemoveGroupByID(id_user uint) error {
+func (gd *groupData) RemoveGroupByID(groupID string, userID uint) error {
 	dataGroup := Group{}
 
-	res := gd.db.Where("created_by_user_id = ?", id_user).Delete(&dataGroup)
-	if res.RowsAffected == 0 || res.Error != nil {
-		return res.Error
+	err := gd.db.Where("id = ?", groupID).First(&dataGroup).Error
+	if err != nil {
+		return err
 	}
 
+	if dataGroup.Created_By_User_ID != userID {
+		return errors.New("unauthorized")
+	}
+
+	dataGroup.Status = "non-active"
+	err = gd.db.Save(&dataGroup).Error
+	if err != nil {
+		return err
+	}
+	gd.db.Delete(&dataGroup)
 	return nil
 
 }

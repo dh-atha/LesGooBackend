@@ -30,7 +30,7 @@ type GroupUsecase interface {
 	AddGroup(data Group) error
 	AddGroupUser(dataUser Group_User) error
 	GetGroupDetail(id string) (Group, error)
-	DeleteGroupByID(id_user uint) error
+	DeleteGroupByID(groupID string, userID uint) error
 	UploadFiles(session *session.Session, bucket string, profileImg *multipart.FileHeader, id_group string) (string, error)
 	GetChatsAndUsersLocation(groupID string) (GetChatsAndUsersLocationResponse, error)
 }
@@ -40,7 +40,7 @@ type GroupData interface {
 	InsertGroupUser(dataUser Group_User) error
 	SelectSpecific(id string) (Group, error)
 	SelectUserData(id string) ([]UsersbyID, error)
-	RemoveGroupByID(id_user uint) error
+	RemoveGroupByID(groupID string, userID uint) error
 	GetChatsAndUsersLocation(groupID string) (GetChatsAndUsersLocationResponse, error)
 }
 
