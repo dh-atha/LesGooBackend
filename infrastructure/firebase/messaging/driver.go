@@ -38,7 +38,11 @@ func SendChat(data domain.Chat, tokens []string, client *messaging.Client, conte
 				Image: "https://lesgooproject.s3.ap-southeast-1.amazonaws.com/logo.png",
 			},
 			Data: map[string]string{
-				"action": "chat",
+				"action":     "chat",
+				"username":   userData.Username,
+				"message":    data.Message,
+				"profileimg": userData.ProfileImg,
+				"isSOS":      "false",
 			},
 			FcmOptions: &messaging.WebpushFcmOptions{
 				Link: "https://google.com",
@@ -82,7 +86,11 @@ func SendSOS(data domain.Chat, tokens []string, client *messaging.Client, contex
 				RequireInteraction: true,
 			},
 			Data: map[string]string{
-				"action": "sos",
+				"action":     "sos",
+				"username":   userData.Username,
+				"message":    data.Message,
+				"profileimg": userData.ProfileImg,
+				"isSOS":      "true",
 			},
 			FcmOptions: &messaging.WebpushFcmOptions{
 				Link: "https://google.com",
