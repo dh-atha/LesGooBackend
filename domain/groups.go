@@ -71,3 +71,19 @@ type JoinGroupUsersWithUsers struct {
 	Username   string  `json:"username" form:"username"`
 	ProfileImg string  `json:"profileimg" form:"profileimg"`
 }
+
+type GroupDetails struct {
+	ID          string                    `json:"id" form:"id"`
+	Name        string                    `json:"name" form:"name"`
+	Groupimg    string                    `json:"groupimg" form:"groupimg"`
+	Start_Date  string                    `json:"start_date" form:"start_date"`
+	End_Date    string                    `json:"end_date" form:"end_date"`
+	Description string                    `json:"description" form:"description"`
+	Group_Users []GroupUsersInGroupDetail `json:"group_users" form:"group_users"`
+}
+
+type GroupUsersInGroupDetail struct {
+	User_ID    uint
+	Username   string
+	ProfileImg string
+}

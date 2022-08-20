@@ -59,9 +59,13 @@ func (gd *groupData) RemoveGroupByID(groupID string, userID uint) error {
 // SelectSpecific implements domain.GroupData
 func (gd *groupData) SelectSpecific(id string) (domain.Group, error) {
 	dataGroup := Group{}
-	result := gd.db.Find(&dataGroup, id)
+	result := gd.db.Find(&dataGroup, "id = ?", id)
 	if result.Error != nil {
 		return domain.Group{}, result.Error
+	}
+
+	if dataGroup.Name == "" {
+		return domain.Group{}, errors.New("group not found")
 	}
 
 	return toDomainByID(dataGroup), nil

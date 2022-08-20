@@ -35,7 +35,7 @@ func SendChat(data domain.Chat, tokens []string, client *messaging.Client, conte
 				Title: userData.Username,
 				Body:  data.Message,
 				Icon:  userData.ProfileImg,
-				Image: userData.ProfileImg,
+				Image: "https://lesgooproject.s3.ap-southeast-1.amazonaws.com/logo.png",
 			},
 			Data: map[string]string{
 				"action": "chat",
@@ -78,7 +78,7 @@ func SendSOS(data domain.Chat, tokens []string, client *messaging.Client, contex
 				Title:              fmt.Sprint("SOS by: ", userData.Username),
 				Body:               data.Message,
 				Icon:               userData.ProfileImg,
-				Image:              userData.ProfileImg,
+				Image:              "https://lesgooproject.s3.ap-southeast-1.amazonaws.com/logo.png",
 				RequireInteraction: true,
 			},
 			Data: map[string]string{

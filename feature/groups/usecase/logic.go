@@ -15,6 +15,12 @@ type groupUsecase struct {
 	groupData domain.GroupData
 }
 
+func New(gd domain.GroupData) domain.GroupUsecase {
+	return &groupUsecase{
+		groupData: gd,
+	}
+}
+
 // UploadFiles implements domain.GroupUsecase
 func (gu *groupUsecase) UploadFiles(session *session.Session, bucket string, groupImg *multipart.FileHeader, id_group string) (string, error) {
 	groupImgExt := strings.Split(groupImg.Filename, ".")
@@ -89,10 +95,4 @@ func (gu *groupUsecase) AddGroup(dataGroup domain.Group) error {
 	}
 
 	return nil
-}
-
-func New(gd domain.GroupData) domain.GroupUsecase {
-	return &groupUsecase{
-		groupData: gd,
-	}
 }
