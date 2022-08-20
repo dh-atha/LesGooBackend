@@ -41,6 +41,12 @@ func (gu *groupUsersData) Joined(newJoined domain.Group_User) error {
 		return errors.New("cant join group when you are in a group")
 	}
 
+	var groupID string
+	gu.db.Raw("SELECT id FROM groups WHERE id = ? AND deleted_at IS NULL", newJoined.Group_ID).Scan(&groupID)
+	if groupID == "" {
+		return errors.New("group not found")
+	}
+
 	cnv := fromModelJoin(newJoined)
 	result := gu.db.Create(&cnv)
 	if result.Error != nil {

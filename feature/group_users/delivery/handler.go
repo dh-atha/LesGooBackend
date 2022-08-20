@@ -57,7 +57,7 @@ func (gu *groupUsersHandler) UserJoined() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 				"code":    http.StatusInternalServerError,
-				"message": "Internal Server Error",
+				"message": err.Error(),
 			})
 		}
 
