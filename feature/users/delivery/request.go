@@ -37,6 +37,7 @@ type UpdateFormat struct {
 	Username   string `json:"username" form:"username"`
 	Email      string `json:"email" form:"email"`
 	Phone      string `json:"phone" form:"phone"`
+	Password   string `json:"password" form:"password"`
 }
 
 func (uf *UpdateFormat) UpdateToModel() domain.User {
@@ -45,5 +46,6 @@ func (uf *UpdateFormat) UpdateToModel() domain.User {
 		Username:   uf.Username,
 		Email:      uf.Email,
 		Phone:      uf.Phone,
+		Password:   uf.Password,
 	}
 }
