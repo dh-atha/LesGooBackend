@@ -6,6 +6,7 @@ import (
 	"lesgoobackend/domain"
 	"lesgoobackend/feature/common"
 	"lesgoobackend/feature/middlewares"
+	"log"
 	"net/http"
 
 	"firebase.google.com/go/messaging"
@@ -38,6 +39,7 @@ func (gu *groupUsersHandler) UserJoined() echo.HandlerFunc {
 		tmp := GroupUsers{}
 		errBind := c.Bind(&tmp)
 		if errBind != nil {
+			log.Println(errBind)
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    http.StatusBadRequest,
 				"message": errBind.Error(),
