@@ -5,6 +5,7 @@ import (
 	"lesgoobackend/domain"
 	"lesgoobackend/feature/common"
 	"lesgoobackend/feature/middlewares"
+	"log"
 	"net/http"
 
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -81,16 +82,18 @@ func (gh *groupHandler) InsertGroup() echo.HandlerFunc {
 
 		errBind := c.Bind(&tmp)
 		if errBind != nil {
+			log.Println(errBind.Error())
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    http.StatusBadRequest,
-				"message": errBind.Error(),
+				"message": "Bad Request",
 			})
 		}
 		err := validator.New().Struct(tmp)
 		if err != nil {
+			log.Println(err.Error())
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    400,
-				"message": err.Error(),
+				"message": "Bad Request",
 			})
 		}
 
