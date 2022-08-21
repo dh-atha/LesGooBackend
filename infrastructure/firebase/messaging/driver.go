@@ -12,7 +12,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-func InitFirebaseClient(ctx context.Context) *messaging.Client {
+func InitFirebaseClient(ctx context.Context, config *config.AppConfig) *messaging.Client {
 	opt := option.WithCredentialsFile(config.GOOGLE_APPLICATION_CREDENTIALS)
 	app, err := firebase.NewApp(ctx, &firebase.Config{
 		ProjectID: config.ProjectID,

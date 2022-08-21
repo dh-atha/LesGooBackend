@@ -1,0 +1,11 @@
+mode: set
+lesgoobackend/feature/chats/usecase/logic.go:18.49,22.2 1 1
+lesgoobackend/feature/chats/usecase/logic.go:24.55,27.2 2 1
+lesgoobackend/feature/chats/usecase/logic.go:29.116,31.16 2 1
+lesgoobackend/feature/chats/usecase/logic.go:35.2,37.21 3 1
+lesgoobackend/feature/chats/usecase/logic.go:40.2,41.17 2 1
+lesgoobackend/feature/chats/usecase/logic.go:46.2,46.35 1 1
+lesgoobackend/feature/chats/usecase/logic.go:31.16,33.3 1 1
+lesgoobackend/feature/chats/usecase/logic.go:37.21,39.3 1 1
+lesgoobackend/feature/chats/usecase/logic.go:41.17,43.3 1 1
+lesgoobackend/feature/chats/usecase/logic.go:43.8,45.3 1 1
