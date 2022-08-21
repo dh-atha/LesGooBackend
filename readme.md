@@ -71,7 +71,6 @@ This is an explanation of the Users section's CRUD method.
 
 </details>
 
-       
 <div>
       <details>
 <summary>🏘️ Groups</summary>
@@ -94,7 +93,7 @@ Several commands make use of Groups features, as shown below.
 | GET | /group/{id} | ID Groups | YES | Displaying Group detail by id. |
 | DELETE| /group/{id} | ID Groups | YES | Delete Groups. |
 
-</details>   
+</details>
 
 <div>
       <details>
@@ -113,8 +112,7 @@ Several commands make use of Chats features, as shown below.
 | --- | --- | --- | --- | --- |
 | POST | /chats  | - | YES | Send a message to the groups. |
 
-
-</details>   
+</details>
 
 <div>
       <details>
@@ -133,32 +131,30 @@ Several commands make use of Locations features, as shown below.
 | --- | --- | --- | --- | --- |
 | POST | /locations  | - | YES | Get location. |
 
-
-</details> 
+</details>
 
 ## Authors 👑
 
-- Faza Muttaqien
-       
-  Reach me:
+-   Faza Muttaqien
 
-  [![GitHub](https://img.shields.io/badge/faza-muttaqien-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/faza-muttaqien)
+    Reach me:
 
-- Atha Dhaiffathin
-       
-  Reach me:
+    [![GitHub](https://img.shields.io/badge/faza-muttaqien-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/faza-muttaqien)
 
-  [![GitHub](https://img.shields.io/badge/dh-atha-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dh-atha)
-  
-- Faqih Assyfa Poedjiono
-       
-  Reach me:
+-   Atha Dhaiffathin
 
-  [![GitHub](https://img.shields.io/badge/faqihassyfa-%23121011.svg?style=for-the-badge&logo=github&logoColor=red)](https://github.com/faqihassyfa)
+    Reach me:
 
-       
+    [![GitHub](https://img.shields.io/badge/dh-atha-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dh-atha)
+
+-   Faqih Assyfa Poedjiono
+
+    Reach me:
+
+    [![GitHub](https://img.shields.io/badge/faqihassyfa-%23121011.svg?style=for-the-badge&logo=github&logoColor=red)](https://github.com/faqihassyfa)
+
  <p align="right">(<a href="#top">back to top</a>)</p>
 <h3>
-<p align="center">:copyright: 2022 </p>
+<p align="center">:copyright: August 2022 </p>
 </h3>
 <!-- end -->
