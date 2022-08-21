@@ -17,7 +17,7 @@ func main() {
 	db := mysql.InitDB(cfg)
 	mysql.MigrateData(db)
 	ctx := context.Background()
-	client := messaging.InitFirebaseClient(ctx)
+	client := messaging.InitFirebaseClient(ctx, cfg)
 
 	e := echo.New()
 	factory.InitFactory(e, db)
