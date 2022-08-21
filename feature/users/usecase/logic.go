@@ -87,17 +87,18 @@ func (ud *userUsecase) UpdateUser(id int, updateProfile domain.User) (row int, e
 	if tmp.Phone != "" {
 		qry["phone"] = &tmp.Phone
 	}
+	if tmp.Password != "" {
+		passwordHashed, err := bcrypt.GenerateFromPassword([]byte(tmp.Password), 10)
+		if err != nil {
+			fmt.Println("Error hash", err.Error())
+		}
+		qry["password"] = string(passwordHashed)
+	}
 
 	if id == -1 {
 		return 0, errors.New("invalid user")
 	}
-	hashed, err := bcrypt.GenerateFromPassword([]byte(updateProfile.Password), bcrypt.DefaultCost)
-	if err != nil {
-		log.Println("error encrypt password", err)
-		return 0, err
-	}
 
-	updateProfile.Password = string(hashed)
 	result, err := ud.userData.Update(id, updateProfile)
 	if err != nil {
 		return 0, errors.New("username or phone number already exist")
