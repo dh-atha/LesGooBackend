@@ -12,8 +12,8 @@ import (
 
 type User struct {
 	gorm.Model
-	Username   string
-	Email      string
+	Username   string `gorm:"unique"`
+	Email      string `gorm:"unique"`
 	Password   string
 	Phone      string
 	ProfileImg string `gorm:"default:https://lesgooproject.s3.ap-southeast-1.amazonaws.com/profileimg/user.png"`
