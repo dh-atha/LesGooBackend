@@ -1,0 +1,13 @@
+mode: set
+lesgoobackend/feature/group_users/usecase/logic.go:16.63,20.2 1 1
+lesgoobackend/feature/group_users/usecase/logic.go:23.69,25.16 2 1
+lesgoobackend/feature/group_users/usecase/logic.go:29.2,29.12 1 1
+lesgoobackend/feature/group_users/usecase/logic.go:25.16,27.3 1 1
+lesgoobackend/feature/group_users/usecase/logic.go:33.68,35.16 2 1
+lesgoobackend/feature/group_users/usecase/logic.go:39.2,39.12 1 1
+lesgoobackend/feature/group_users/usecase/logic.go:35.16,37.3 1 1
+lesgoobackend/feature/group_users/usecase/logic.go:42.124,44.16 2 1
+lesgoobackend/feature/group_users/usecase/logic.go:47.2,49.19 2 1
+lesgoobackend/feature/group_users/usecase/logic.go:53.2,54.12 2 1
+lesgoobackend/feature/group_users/usecase/logic.go:44.16,46.3 1 1
+lesgoobackend/feature/group_users/usecase/logic.go:49.19,51.3 1 1
