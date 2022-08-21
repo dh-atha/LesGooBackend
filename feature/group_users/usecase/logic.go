@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"lesgoobackend/domain"
 	fcm "lesgoobackend/infrastructure/firebase/messaging"
 
@@ -44,6 +45,11 @@ func (gud *groupUsersData) UpdateLocation(data domain.Group_User, client *messag
 		return err
 	}
 	res := gud.groupUsersData.GetToken(data.Group_ID, data.User_ID)
+
+	if len(res) == 0 {
+		return errors.New("no notification sent")
+	}
+
 	fcm.SendLocation(res, client, context)
-	return err
+	return nil
 }

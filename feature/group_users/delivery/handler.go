@@ -130,7 +130,12 @@ func (gu *groupUsersHandler) UpdateLocation() echo.HandlerFunc {
 		req.UserID = uint(common.ExtractData(c))
 
 		err = gu.groupUsersUsecase.UpdateLocation(ToModelJoin(req), FCMClient, context)
-		if err != nil {
+		if err.Error() == "no notification sent" {
+			return c.JSON(http.StatusOK, map[string]interface{}{
+				"code":    200,
+				"message": "success update location",
+			})
+		} else if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 				"code":    500,
 				"message": err.Error(),
