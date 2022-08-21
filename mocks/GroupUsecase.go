@@ -45,13 +45,13 @@ func (_m *GroupUsecase) AddGroupUser(dataUser domain.Group_User) error {
 	return r0
 }
 
-// DeleteGroupByID provides a mock function with given fields: id_user
-func (_m *GroupUsecase) DeleteGroupByID(id_user uint) error {
-	ret := _m.Called(id_user)
+// DeleteGroupByID provides a mock function with given fields: groupID, userID
+func (_m *GroupUsecase) DeleteGroupByID(groupID string, userID uint) error {
+	ret := _m.Called(groupID, userID)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(uint) error); ok {
-		r0 = rf(id_user)
+	if rf, ok := ret.Get(0).(func(string, uint) error); ok {
+		r0 = rf(groupID, userID)
 	} else {
 		r0 = ret.Error(0)
 	}
