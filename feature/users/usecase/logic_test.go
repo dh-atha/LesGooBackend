@@ -3,8 +3,12 @@ package usecase
 import (
 	"errors"
 	"fmt"
+	"lesgoobackend/config"
 	"lesgoobackend/domain"
+	"lesgoobackend/infrastructure/aws/s3"
 	"lesgoobackend/mocks"
+	"mime/multipart"
+	"os"
 	"testing"
 
 	"github.com/go-playground/validator/v10"
@@ -24,87 +28,108 @@ func TestAddUser(t *testing.T) {
 		Password: "12345678",
 	}
 
-	t.Run("Success Insert", func(t *testing.T) {
+	t.Run("success add user", func(t *testing.T) {
 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
 
-		useCase := New(repo, validator.New())
-
-		res, err := useCase.AddUser(insertData)
+		usecase := New(repo, validator.New())
+		res, err := usecase.AddUser(insertData)
 		assert.Nil(t, err)
 		assert.Equal(t, 1, res)
 		repo.AssertExpectations(t)
 	})
-
-	t.Run("Duplicated Data", func(t *testing.T) {
-		repo.On("Insert", mock.Anything).Return(0, gorm.ErrRegistered).Once()
-
-		useCase := New(repo, validator.New())
-
-		row, err := useCase.AddUser(insertData)
-		assert.NotNil(t, err)
-		assert.Equal(t, -4, row)
-		repo.AssertExpectations(t)
-	})
-
-	t.Run("Error from server", func(t *testing.T) {
-		repo.On("Insert", mock.Anything).Return(0, gorm.ErrInvalidValueOfLength).Once()
-
-		useCase := New(repo, validator.New())
-
-		res, err := useCase.AddUser(insertData)
-		assert.NotNil(t, err)
-		assert.Equal(t, -4, res)
-		repo.AssertExpectations(t)
-	})
-
-	t.Run("Empty Username", func(t *testing.T) {
-		repo.On("Insert", mock.Anything).Return(1, nil).Once()
-
-		useCase := New(repo, validator.New())
-		dummy := insertData
-		dummy.Username = ""
-		res, err := useCase.AddUser(dummy)
-		assert.NotNil(t, err)
-		assert.EqualError(t, err, errors.New("invalid username").Error())
-		assert.Equal(t, -1, res)
-	})
-
-	t.Run("Empty Password", func(t *testing.T) {
-		repo.On("Insert", mock.Anything).Return(1, nil).Once()
-
-		useCase := New(repo, validator.New())
-		dummy := insertData
-		dummy.Password = ""
-		res, err := useCase.AddUser(dummy)
-		assert.NotNil(t, err)
-		assert.EqualError(t, err, errors.New("invalid password").Error())
-		assert.Equal(t, -1, res)
-	})
-
-	t.Run("Empty Phone", func(t *testing.T) {
-		repo.On("Insert", mock.Anything).Return(1, nil).Once()
-
-		useCase := New(repo, validator.New())
-		dummy := insertData
-		dummy.Phone = ""
-		res, err := useCase.AddUser(dummy)
-		assert.NotNil(t, err)
-		assert.EqualError(t, err, errors.New("invalid phone number").Error())
-		assert.Equal(t, -1, res)
-	})
-
-	t.Run("Empty Email", func(t *testing.T) {
-		repo.On("Insert", mock.Anything).Return(1, nil).Once()
-
-		useCase := New(repo, validator.New())
-		dummy := insertData
-		dummy.Email = ""
-		res, err := useCase.AddUser(dummy)
-		assert.NotNil(t, err)
-		assert.EqualError(t, err, errors.New("invalid Email").Error())
-		assert.Equal(t, -1, res)
-	})
 }
+
+// func TestAddUser(t *testing.T) {
+// 	repo := new(mocks.UserData)
+// 	insertData := domain.User{
+// 		ID:       1,
+// 		Username: "admin",
+// 		Email:    "admin@min.com",
+// 		Phone:    "08123456789",
+// 		Password: "12345678",
+// 	}
+
+// 	t.Run("Success Insert", func(t *testing.T) {
+// 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
+
+// 		useCase := New(repo, validator.New())
+
+// 		res, err := useCase.AddUser(insertData)
+// 		assert.Nil(t, err)
+// 		assert.Equal(t, 1, res)
+// 		repo.AssertExpectations(t)
+// 	})
+
+// 	t.Run("Duplicated Data", func(t *testing.T) {
+// 		repo.On("Insert", mock.Anything).Return(0, gorm.ErrRegistered).Once()
+
+// 		useCase := New(repo, validator.New())
+
+// 		row, err := useCase.AddUser(insertData)
+// 		assert.NotNil(t, err)
+// 		assert.Equal(t, -4, row)
+// 		repo.AssertExpectations(t)
+// 	})
+
+// 	t.Run("Error from server", func(t *testing.T) {
+// 		repo.On("Insert", mock.Anything).Return(0, gorm.ErrInvalidValueOfLength).Once()
+
+// 		useCase := New(repo, validator.New())
+
+// 		res, err := useCase.AddUser(insertData)
+// 		assert.NotNil(t, err)
+// 		assert.Equal(t, -4, res)
+// 		repo.AssertExpectations(t)
+// 	})
+
+// 	t.Run("Empty Username", func(t *testing.T) {
+// 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
+
+// 		useCase := New(repo, validator.New())
+// 		dummy := insertData
+// 		dummy.Username = ""
+// 		res, err := useCase.AddUser(dummy)
+// 		assert.NotNil(t, err)
+// 		assert.EqualError(t, err, errors.New("invalid username").Error())
+// 		assert.Equal(t, -1, res)
+// 	})
+
+// 	t.Run("Empty Password", func(t *testing.T) {
+// 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
+
+// 		useCase := New(repo, validator.New())
+// 		dummy := insertData
+// 		dummy.Password = ""
+// 		res, err := useCase.AddUser(dummy)
+// 		assert.NotNil(t, err)
+// 		assert.EqualError(t, err, errors.New("invalid password").Error())
+// 		assert.Equal(t, -1, res)
+// 	})
+
+// 	t.Run("Empty Phone", func(t *testing.T) {
+// 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
+
+// 		useCase := New(repo, validator.New())
+// 		dummy := insertData
+// 		dummy.Phone = ""
+// 		res, err := useCase.AddUser(dummy)
+// 		assert.NotNil(t, err)
+// 		assert.EqualError(t, err, errors.New("invalid phone number").Error())
+// 		assert.Equal(t, -1, res)
+// 	})
+
+// 	t.Run("Empty Email", func(t *testing.T) {
+// 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
+
+// 		useCase := New(repo, validator.New())
+// 		dummy := insertData
+// 		dummy.Email = ""
+// 		res, err := useCase.AddUser(dummy)
+// 		assert.NotNil(t, err)
+// 		assert.EqualError(t, err, errors.New("invalid Email").Error())
+// 		assert.Equal(t, -1, res)
+// 	})
+// }
 
 func TestLoginUser(t *testing.T) {
 	repo := new(mocks.UserData)
@@ -194,13 +219,13 @@ func TestUpdateUser(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 	t.Run("Generate Hash Error", func(t *testing.T) {
-		repo.On("Update", mock.Anything, mock.Anything).Return(0, errors.New("error encrypt password")).Once()
+		repo.On("Update", mock.Anything, mock.Anything).Return(0, errors.New("username or phone number already exist")).Once()
 
 		useCase := New(repo, validator.New())
 
 		_, err := useCase.UpdateUser(int(insertData.ID), insertData)
 		assert.NotNil(t, err)
-		assert.EqualError(t, err, errors.New("error encrypt password").Error())
+		assert.EqualError(t, err, errors.New("username or phone number already exist").Error())
 		repo.AssertExpectations(t)
 	})
 }
@@ -296,28 +321,27 @@ func TestDeleteUser(t *testing.T) {
 	})
 }
 
-// func TestUploadFiles(t *testing.T) {
-// 	imageTrue, _ := os.Open("./files/ERD.jpg")
-// 	imageTrueCnv := &multipart.FileHeader{
-// 		Filename: imageTrue.Name(),
-// 		Size:     int64(imageTrue.Fd()),
-// 	}
+func TestUploadFiles(t *testing.T) {
+	imageTrue, _ := os.Open("./files/ERD.jpg")
+	imageTrueCnv := &multipart.FileHeader{
+		Filename: imageTrue.Name(),
+	}
 
-// 	config := config.GetConfig()
-// 	session := s3.ConnectAws(config)
+	config := config.GetConfig()
+	session := s3.ConnectAws(config)
 
-// 	repo := mocks.UserData{}
-// 	usecase := New(&repo, validator.New())
+	repo := mocks.UserData{}
+	usecase := New(&repo, validator.New())
 
-// 	t.Run("", func(t *testing.T) {
-// 		repo.On("UploadFiles", mock.Anything, mock.Anything).Return(nil, errors.New("image not supported, supported: png/jpeg/jpg")).Once()
-// 		profileImgUrl, err := usecase.UploadFiles(session, "bucket", imageTrueCnv)
+	t.Run("", func(t *testing.T) {
+		repo.On("UploadFiles", mock.Anything, mock.Anything, mock.Anything).Return(errors.New("image not supported, supported: png/jpeg/jpg")).Once()
+		profileImgUrl, err := usecase.UploadFiles(session, "bucket", imageTrueCnv)
 
-// 		assert.NotNil(t, err)
-// 		assert.Equal(t, "", profileImgUrl)
-// 		repo.AssertExpectations(t)
-// 	})
-// }
+		assert.NotNil(t, err)
+		assert.Equal(t, "", profileImgUrl)
+		repo.AssertExpectations(t)
+	})
+}
 
 func TestLogout(t *testing.T) {
 	repo := new(mocks.UserData)
@@ -327,6 +351,21 @@ func TestLogout(t *testing.T) {
 
 		usecase := New(repo, validator.New())
 		err := usecase.Logout(uint(1))
+		assert.Nil(t, err)
+		repo.AssertExpectations(t)
+	})
+}
+
+//TesGetGroupID implements domain.UserUsecase
+func TestGetGroupID(t *testing.T) {
+	repo := new(mocks.UserData)
+	insertData := domain.User{}
+
+	t.Run("success get group id", func(t *testing.T) {
+		repo.On("GetGroupID", mock.Anything).Return("m4nt4p", nil).Once()
+
+		usecase := New(repo, validator.New())
+		err := usecase.GetGroupID(insertData)
 		assert.Nil(t, err)
 		repo.AssertExpectations(t)
 	})

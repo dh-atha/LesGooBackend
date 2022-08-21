@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"lesgoobackend/domain"
-	"lesgoobackend/feature/users/data"
-	"lesgoobackend/feature/users/delivery"
 	"lesgoobackend/infrastructure/aws/s3"
 	"log"
 
@@ -15,7 +13,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -32,39 +29,8 @@ func New(ud domain.UserData, v *validator.Validate) domain.UserUsecase {
 }
 
 func (ud *userUsecase) AddUser(newUser domain.User) (row int, err error) {
-	var tmp = data.FromModel(newUser)
-	if newUser.Username == "" {
-		return -1, errors.New("invalid username")
-	}
-	if newUser.Email == "" {
-		return -1, errors.New("invalid Email")
-	}
-	if newUser.Password == "" {
-		return -1, errors.New("invalid password")
-	}
-	if newUser.Phone == "" {
-		return -1, errors.New("invalid phone number")
-	}
-	log.Println(tmp.ToModel())
-	duplicate := ud.userData.CheckDuplicate(tmp.ToModel())
-	if duplicate {
-		log.Println("Duplicate Data")
-		return -2, errors.New("duplicate data")
-	}
-
-	hashed, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
-	if err != nil {
-		log.Println("error encrypt password", err)
-		return -3, err
-	}
-	newUser.Password = string(hashed)
-	inserted, err := ud.userData.Insert(newUser)
-
-	if err != nil {
-		log.Println("error from usecase", err.Error())
-		return -4, err
-	}
-	return inserted, nil
+	user, err := ud.userData.Insert(newUser)
+	return user, err
 }
 
 func (ud *userUsecase) LoginUser(userLogin domain.User) (response int, data domain.User, err error) {
@@ -73,38 +39,8 @@ func (ud *userUsecase) LoginUser(userLogin domain.User) (response int, data doma
 }
 
 func (ud *userUsecase) UpdateUser(id int, updateProfile domain.User) (row int, err error) {
-	var tmp delivery.UpdateFormat
-	qry := map[string]interface{}{}
-	if tmp.ProfileImg != "" {
-		qry["profileimg"] = &tmp.ProfileImg
-	}
-	if tmp.Username != "" {
-		qry["username"] = &tmp.Username
-	}
-	if tmp.Email != "" {
-		qry["email"] = &tmp.Email
-	}
-	if tmp.Phone != "" {
-		qry["phone"] = &tmp.Phone
-	}
-	if tmp.Password != "" {
-		passwordHashed, err := bcrypt.GenerateFromPassword([]byte(tmp.Password), 10)
-		if err != nil {
-			fmt.Println("Error hash", err.Error())
-		}
-		qry["password"] = string(passwordHashed)
-	}
-
-	if id == -1 {
-		return 0, errors.New("invalid user")
-	}
-
-	result, err := ud.userData.Update(id, updateProfile)
-	if err != nil {
-		return 0, errors.New("username or phone number already exist")
-	}
-
-	return result, nil
+	data, err := ud.userData.Update(id, updateProfile)
+	return data, err
 }
 
 func (ud *userUsecase) GetProfile(id int) (domain.User, error) {
@@ -127,7 +63,7 @@ func (ud *userUsecase) DeleteUser(id int) (row int, err error) {
 	if err != nil {
 		log.Println("delete usecase error", err.Error())
 		if err == gorm.ErrRecordNotFound {
-			return row, errors.New("data not found")
+			return row, errors.New("record not found")
 		} else {
 			return row, errors.New("failed to delete user")
 		}
