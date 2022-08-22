@@ -39,18 +39,14 @@ func (ud *userData) Login(userLogin domain.User) (row int, data domain.User, err
 
 	result := ud.db.Where("username = ?", dataUser.Username).First(&dataUser)
 
-	if result.Error != nil {
-		return 0, domain.User{}, result.Error
-	}
-
 	if result.RowsAffected != 1 {
-		return -1, domain.User{}, fmt.Errorf("failed to login")
+		return -1, domain.User{}, fmt.Errorf("username not found")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(dataUser.Password), []byte(password))
 
 	if err != nil {
-		return -2, domain.User{}, fmt.Errorf("failed to login")
+		return -2, domain.User{}, fmt.Errorf("wrong password")
 	}
 
 	if dataUser.Fcm_Token != "" {

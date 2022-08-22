@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -29,6 +30,8 @@ func New(ud domain.UserData, v *validator.Validate) domain.UserUsecase {
 }
 
 func (ud *userUsecase) AddUser(newUser domain.User) (row int, err error) {
+	hashed, _ := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+	newUser.Password = string(hashed)
 	user, err := ud.userData.Insert(newUser)
 	return user, err
 }
