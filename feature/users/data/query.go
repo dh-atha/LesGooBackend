@@ -109,17 +109,17 @@ func (ud *userData) Logout(userID uint) error {
 func (ud *userData) CheckDuplicate(newUser domain.User) (bool, error) {
 	var user = FromModel(newUser)
 	err := ud.db.Find(&user, "username = ?", newUser.Username)
-	if err.RowsAffected == 1 {
+	if err.RowsAffected >= 1 {
 		log.Println("Invalid Username", err.Error)
 		return true, errors.New("Invalid Username")
 	}
 	err = ud.db.Find(&user, "email = ?", newUser.Email)
-	if err.RowsAffected == 1 {
+	if err.RowsAffected >= 1 {
 		log.Println("Invalid Email", err.Error)
 		return true, errors.New("Invalid Email")
 	}
 	err = ud.db.Find(&user, "phone = ?", newUser.Phone)
-	if err.RowsAffected == 1 {
+	if err.RowsAffected >= 1 {
 		log.Println("Invalid Phone", err.Error)
 		return true, errors.New("Invalid Phone")
 	}
