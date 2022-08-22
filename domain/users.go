@@ -44,6 +44,6 @@ type UserData interface {
 	GetSpecific(userID int) (User, error)
 	Delete(userID int) (row int, err error)
 	Logout(id uint) error
-	CheckDuplicate(newuser User) bool
+	CheckDuplicate(newuser User) (bool, error)
 	GetGroupID(data User) string
 }

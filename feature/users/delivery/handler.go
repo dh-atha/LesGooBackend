@@ -47,11 +47,17 @@ func (uh *userHandler) InsertUser() echo.HandlerFunc {
 		}
 
 		_, err := uh.userUsecase.AddUser(tmp.ToModel())
-		if err != nil {
+		if err.Error() == "Invalid Username" || err.Error() == "Invalid Email" {
 			log.Println("Cannot proces data", err)
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    400,
-				"message": "Invalid Username",
+				"message": err.Error(),
+			})
+		} else if err != nil {
+			log.Println(err)
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
+				"message": "Internal Server Error",
 			})
 		}
 
