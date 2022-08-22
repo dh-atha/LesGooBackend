@@ -37,14 +37,14 @@ func TestAddUser(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 
-	// t.Run("success add user", func(t *testing.T) {
-	// 	repo.On("CheckDuplicate", insertData).Return(false).Once()
-	// 	repo.On("Insert", insertData).Return(1, nil).Once()
-	// 	data, err := usecase.AddUser(insertData)
-	// 	assert.Equal(t, 1, data)
-	// 	assert.Nil(t, err)
-	// 	repo.AssertExpectations(t)
-	// })
+	t.Run("success add user", func(t *testing.T) {
+		repo.On("CheckDuplicate", mock.Anything).Return(false).Once()
+		repo.On("Insert", mock.Anything).Return(1, nil).Once()
+		data, err := usecase.AddUser(insertData)
+		assert.Equal(t, 1, data)
+		assert.Nil(t, err)
+		repo.AssertExpectations(t)
+	})
 }
 
 // func TestAddUser(t *testing.T) {
