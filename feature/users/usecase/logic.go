@@ -47,6 +47,11 @@ func (ud *userUsecase) LoginUser(userLogin domain.User) (response int, data doma
 }
 
 func (ud *userUsecase) UpdateUser(id int, updateProfile domain.User) (row int, err error) {
+	checkDuplicate := ud.userData.CheckDuplicate(updateProfile)
+	if checkDuplicate {
+		return 0, errors.New("username or email already registered")
+	}
+
 	data, err := ud.userData.Update(id, updateProfile)
 	return data, err
 }
