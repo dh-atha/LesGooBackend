@@ -69,18 +69,20 @@ func (uh *userHandler) InsertUser() echo.HandlerFunc {
 		}
 
 		_, err := uh.userUsecase.AddUser(tmp.ToModel())
-		if err.Error() == "Invalid Username" || err.Error() == "Invalid Email" || err.Error() == "Invalid Phone" {
-			log.Println("Cannot proces data", err)
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"code":    400,
-				"message": "username or email or Telephone Number Already Exist",
-			})
-		} else if err != nil {
-			log.Println(err)
-			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"code":    500,
-				"message": "Internal Server Error",
-			})
+		if err != nil {
+			if err.Error() == "Invalid Username" || err.Error() == "Invalid Email" || err.Error() == "Invalid Phone" {
+				log.Println("Cannot proces data", err)
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{
+					"code":    400,
+					"message": "username or email or Telephone Number Already Exist",
+				})
+			} else {
+				log.Println(err)
+				return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+					"code":    500,
+					"message": "Internal Server Error",
+				})
+			}
 		}
 
 		return c.JSON(http.StatusCreated, map[string]interface{}{
