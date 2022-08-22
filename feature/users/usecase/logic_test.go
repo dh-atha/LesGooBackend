@@ -20,6 +20,7 @@ import (
 
 func TestAddUser(t *testing.T) {
 	repo := new(mocks.UserData)
+	usecase := New(repo, validator.New())
 	insertData := domain.User{
 		ID:       1,
 		Username: "admin",
@@ -28,15 +29,22 @@ func TestAddUser(t *testing.T) {
 		Password: "12345678",
 	}
 
-	t.Run("success add user", func(t *testing.T) {
-		repo.On("Insert", mock.Anything).Return(1, nil).Once()
-
-		usecase := New(repo, validator.New())
-		res, err := usecase.AddUser(insertData)
-		assert.Nil(t, err)
-		assert.Equal(t, 1, res)
+	t.Run("duplicate data", func(t *testing.T) {
+		repo.On("CheckDuplicate", insertData).Return(true).Once()
+		data, err := usecase.AddUser(insertData)
+		assert.Equal(t, 0, data)
+		assert.EqualError(t, err, "username or email already registered")
 		repo.AssertExpectations(t)
 	})
+
+	// t.Run("success add user", func(t *testing.T) {
+	// 	repo.On("CheckDuplicate", insertData).Return(false).Once()
+	// 	repo.On("Insert", insertData).Return(1, nil).Once()
+	// 	data, err := usecase.AddUser(insertData)
+	// 	assert.Equal(t, 1, data)
+	// 	assert.Nil(t, err)
+	// 	repo.AssertExpectations(t)
+	// })
 }
 
 // func TestAddUser(t *testing.T) {
