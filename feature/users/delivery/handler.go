@@ -204,7 +204,7 @@ func (uh *userHandler) GetProfile() echo.HandlerFunc {
 				return c.JSON(http.StatusInternalServerError, err.Error())
 			}
 		}
-		return c.JSON(http.StatusFound, map[string]interface{}{
+		return c.JSON(http.StatusOK, map[string]interface{}{
 			"code":    200,
 			"message": "Success Operation",
 			"data":    data,
