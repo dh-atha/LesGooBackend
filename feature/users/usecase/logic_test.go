@@ -30,15 +30,15 @@ func TestAddUser(t *testing.T) {
 	}
 
 	t.Run("duplicate data", func(t *testing.T) {
-		repo.On("CheckDuplicate", insertData).Return(true).Once()
+		repo.On("CheckDuplicate", insertData).Return(true, errors.New("Invalid Username")).Once()
 		data, err := usecase.AddUser(insertData)
 		assert.Equal(t, 0, data)
-		assert.EqualError(t, err, "username or email already registered")
+		assert.EqualError(t, err, "Invalid Username")
 		repo.AssertExpectations(t)
 	})
 
 	t.Run("success add user", func(t *testing.T) {
-		repo.On("CheckDuplicate", mock.Anything).Return(false).Once()
+		repo.On("CheckDuplicate", mock.Anything).Return(false, nil).Once()
 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
 		data, err := usecase.AddUser(insertData)
 		assert.Equal(t, 1, data)
@@ -116,15 +116,15 @@ func TestUpdateUser(t *testing.T) {
 	}
 
 	t.Run("Duplicate Data", func(t *testing.T) {
-		repo.On("CheckDuplicate", insertData).Return(true).Once()
+		repo.On("CheckDuplicate", insertData).Return(true, errors.New("Invalid Username")).Once()
 		data, err := useCase.UpdateUser(1, insertData)
-		assert.EqualError(t, err, "username or email already registered")
+		assert.EqualError(t, err, "Invalid Username")
 		assert.Equal(t, 0, data)
 		repo.AssertExpectations(t)
 	})
 
 	t.Run("success update", func(t *testing.T) {
-		repo.On("CheckDuplicate", insertData).Return(false).Once()
+		repo.On("CheckDuplicate", insertData).Return(false, nil).Once()
 		repo.On("Update", 1, insertData).Return(1, nil).Once()
 		data, err := useCase.UpdateUser(1, insertData)
 		assert.Nil(t, err)

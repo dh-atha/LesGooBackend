@@ -14,7 +14,7 @@ type UserData struct {
 }
 
 // CheckDuplicate provides a mock function with given fields: newuser
-func (_m *UserData) CheckDuplicate(newuser domain.User) bool {
+func (_m *UserData) CheckDuplicate(newuser domain.User) (bool, error) {
 	ret := _m.Called(newuser)
 
 	var r0 bool
@@ -24,7 +24,14 @@ func (_m *UserData) CheckDuplicate(newuser domain.User) bool {
 		r0 = ret.Get(0).(bool)
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(domain.User) error); ok {
+		r1 = rf(newuser)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // Delete provides a mock function with given fields: userID

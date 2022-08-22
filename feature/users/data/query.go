@@ -106,16 +106,20 @@ func (ud *userData) Logout(userID uint) error {
 	return nil
 }
 
-func (ud *userData) CheckDuplicate(newUser domain.User) bool {
+func (ud *userData) CheckDuplicate(newUser domain.User) (bool, error) {
 	var user = FromModel(newUser)
-	err := ud.db.Find(&user, "username = ? OR email = ?", user.Username, user.Email)
-	log.Println(user)
+	err := ud.db.Find(&user, "username = ?", newUser.Username)
 	if err.RowsAffected == 1 {
-		log.Println("Duplicated data", err.Error)
-		return true
+		log.Println("Invalid Username", err.Error)
+		return true, errors.New("Invalid Username")
+	}
+	err = ud.db.Find(&user, "email = ?", newUser.Email)
+	if err.RowsAffected == 1 {
+		log.Println("Invalid Email", err.Error)
+		return true, errors.New("Invalid Email")
 	}
 
-	return false
+	return false, nil
 }
 
 func (ud *userData) GetGroupID(data domain.User) string {

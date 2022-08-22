@@ -30,9 +30,9 @@ func New(ud domain.UserData, v *validator.Validate) domain.UserUsecase {
 }
 
 func (ud *userUsecase) AddUser(newUser domain.User) (row int, err error) {
-	checkDuplicate := ud.userData.CheckDuplicate(newUser)
+	checkDuplicate, err := ud.userData.CheckDuplicate(newUser)
 	if checkDuplicate {
-		return 0, errors.New("username or email already registered")
+		return 0, err
 	}
 
 	hashed, _ := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
@@ -47,9 +47,9 @@ func (ud *userUsecase) LoginUser(userLogin domain.User) (response int, data doma
 }
 
 func (ud *userUsecase) UpdateUser(id int, updateProfile domain.User) (row int, err error) {
-	checkDuplicate := ud.userData.CheckDuplicate(updateProfile)
+	checkDuplicate, err := ud.userData.CheckDuplicate(updateProfile)
 	if checkDuplicate {
-		return 0, errors.New("username or email already registered")
+		return 0, err
 	}
 
 	data, err := ud.userData.Update(id, updateProfile)
