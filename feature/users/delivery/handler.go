@@ -46,6 +46,23 @@ func (uh *userHandler) InsertUser() echo.HandlerFunc {
 			})
 		}
 
+		if tmp.Username == "" {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": "Invalid Username",
+			})
+		} else if tmp.Email == "" {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": "Invalid Email",
+			})
+		} else if tmp.Phone == "" {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": "Invalid Phone",
+			})
+		}
+
 		_, err := uh.userUsecase.AddUser(tmp.ToModel())
 		if err.Error() == "Invalid Username" || err.Error() == "Invalid Email" || err.Error() == "Invalid Phone" {
 			log.Println("Cannot proces data", err)
