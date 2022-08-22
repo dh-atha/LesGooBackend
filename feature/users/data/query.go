@@ -118,6 +118,11 @@ func (ud *userData) CheckDuplicate(newUser domain.User) (bool, error) {
 		log.Println("Invalid Email", err.Error)
 		return true, errors.New("Invalid Email")
 	}
+	err = ud.db.Find(&user, "phone = ?", newUser.Phone)
+	if err.RowsAffected == 1 {
+		log.Println("Invalid Phone", err.Error)
+		return true, errors.New("Invalid Phone")
+	}
 
 	return false, nil
 }
