@@ -190,6 +190,7 @@ func TestLoginUser(t *testing.T) {
 
 func TestUpdateUser(t *testing.T) {
 	repo := new(mocks.UserData)
+	useCase := New(repo, validator.New())
 	insertData := domain.User{
 		ID:         1,
 		ProfileImg: "aaa.jpg",
@@ -200,32 +201,9 @@ func TestUpdateUser(t *testing.T) {
 
 	t.Run("Success Update", func(t *testing.T) {
 		repo.On("Update", mock.Anything, mock.Anything).Return(1, nil).Once()
-
-		useCase := New(repo, validator.New())
-
 		res, err := useCase.UpdateUser(int(insertData.ID), insertData)
 		assert.Nil(t, err)
 		assert.Equal(t, 1, res)
-		repo.AssertExpectations(t)
-	})
-	t.Run("Username or phone number already exist", func(t *testing.T) {
-		repo.On("Update", mock.Anything, mock.Anything).Return(0, errors.New("username or phone number already exist")).Once()
-
-		useCase := New(repo, validator.New())
-
-		_, err := useCase.UpdateUser(int(insertData.ID), insertData)
-		assert.NotNil(t, err)
-		assert.EqualError(t, err, errors.New("username or phone number already exist").Error())
-		repo.AssertExpectations(t)
-	})
-	t.Run("Generate Hash Error", func(t *testing.T) {
-		repo.On("Update", mock.Anything, mock.Anything).Return(0, errors.New("username or phone number already exist")).Once()
-
-		useCase := New(repo, validator.New())
-
-		_, err := useCase.UpdateUser(int(insertData.ID), insertData)
-		assert.NotNil(t, err)
-		assert.EqualError(t, err, errors.New("username or phone number already exist").Error())
 		repo.AssertExpectations(t)
 	})
 }

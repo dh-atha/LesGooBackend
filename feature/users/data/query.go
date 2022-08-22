@@ -25,7 +25,7 @@ func (ud *userData) Insert(newUser domain.User) (row int, err error) {
 	result := ud.db.Create(&cnv)
 	if result.Error != nil {
 		log.Println("Cannot create object", errors.New("error db"))
-		return -1, errors.New("username or number phone already exist")
+		return -1, result.Error
 	}
 	if result.RowsAffected == 0 {
 		return 0, errors.New("failed insert data")
@@ -64,7 +64,7 @@ func (ud *userData) Update(userID int, updatedData domain.User) (row int, err er
 	result := ud.db.Model(&User{}).Where("ID = ?", userID).Updates(cnv)
 	if result.Error != nil {
 		log.Println("Cannot update data", errors.New("error db"))
-		return -1, errors.New("username or number phone already exist")
+		return -1, result.Error
 	}
 	if result.RowsAffected == 0 {
 		return -2, errors.New("failed update data")
