@@ -1,0 +1,26 @@
+mode: set
+lesgoobackend/feature/groups/usecase/logic.go:18.51,22.2 1 1
+lesgoobackend/feature/groups/usecase/logic.go:25.143,28.100 3 1
+lesgoobackend/feature/groups/usecase/logic.go:32.2,34.16 3 1
+lesgoobackend/feature/groups/usecase/logic.go:38.2,38.27 1 0
+lesgoobackend/feature/groups/usecase/logic.go:28.100,30.3 1 1
+lesgoobackend/feature/groups/usecase/logic.go:34.16,36.3 1 1
+lesgoobackend/feature/groups/usecase/logic.go:41.115,44.2 2 1
+lesgoobackend/feature/groups/usecase/logic.go:47.76,49.16 2 1
+lesgoobackend/feature/groups/usecase/logic.go:53.2,53.12 1 1
+lesgoobackend/feature/groups/usecase/logic.go:49.16,51.3 1 1
+lesgoobackend/feature/groups/usecase/logic.go:57.73,59.16 2 1
+lesgoobackend/feature/groups/usecase/logic.go:63.2,65.20 3 1
+lesgoobackend/feature/groups/usecase/logic.go:69.2,69.22 1 1
+lesgoobackend/feature/groups/usecase/logic.go:59.16,61.3 1 1
+lesgoobackend/feature/groups/usecase/logic.go:65.20,67.3 1 1
+lesgoobackend/feature/groups/usecase/logic.go:73.72,74.107 1 1
+lesgoobackend/feature/groups/usecase/logic.go:78.2,79.16 2 1
+lesgoobackend/feature/groups/usecase/logic.go:83.2,83.12 1 1
+lesgoobackend/feature/groups/usecase/logic.go:74.107,76.3 1 1
+lesgoobackend/feature/groups/usecase/logic.go:79.16,81.3 1 1
+lesgoobackend/feature/groups/usecase/logic.go:87.64,88.145 1 1
+lesgoobackend/feature/groups/usecase/logic.go:92.2,93.16 2 1
+lesgoobackend/feature/groups/usecase/logic.go:97.2,97.12 1 1
+lesgoobackend/feature/groups/usecase/logic.go:88.145,90.3 1 1
+lesgoobackend/feature/groups/usecase/logic.go:93.16,95.3 1 1

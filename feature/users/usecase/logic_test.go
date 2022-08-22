@@ -322,23 +322,33 @@ func TestDeleteUser(t *testing.T) {
 }
 
 func TestUploadFiles(t *testing.T) {
-	imageTrue, _ := os.Open("./files/ERD.jpg")
-	imageTrueCnv := &multipart.FileHeader{
-		Filename: imageTrue.Name(),
-	}
-
 	config := config.GetConfig()
 	session := s3.ConnectAws(config)
 
 	repo := mocks.UserData{}
 	usecase := New(&repo, validator.New())
 
-	t.Run("", func(t *testing.T) {
-		repo.On("UploadFiles", mock.Anything, mock.Anything, mock.Anything).Return(errors.New("image not supported, supported: png/jpeg/jpg")).Once()
-		profileImgUrl, err := usecase.UploadFiles(session, "bucket", imageTrueCnv)
+	imageFalse, _ := os.Open("./files/ERD.pdf")
+	imageFalseCnv := &multipart.FileHeader{
+		Filename: imageFalse.Name(),
+	}
 
-		assert.NotNil(t, err)
-		assert.Equal(t, "", profileImgUrl)
+	imageTrue, _ := os.Open("./files/ERD.jpg")
+	imageTrueCnv := &multipart.FileHeader{
+		Filename: imageTrue.Name(),
+	}
+
+	t.Run("image not supported", func(t *testing.T) {
+		profileImgUrl, err := usecase.UploadFiles(session, "bucket", imageFalseCnv)
+		assert.Equal(t, profileImgUrl, "")
+		assert.EqualError(t, err, "image not supported, supported: png/jpeg/jpg")
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("failed upload image", func(t *testing.T) {
+		profileImgUrl, err := usecase.UploadFiles(session, "bucket", imageTrueCnv)
+		assert.Equal(t, profileImgUrl, "")
+		assert.EqualError(t, err, "cant upload image to s3")
 		repo.AssertExpectations(t)
 	})
 }
@@ -356,17 +366,15 @@ func TestLogout(t *testing.T) {
 	})
 }
 
-//TesGetGroupID implements domain.UserUsecase
 func TestGetGroupID(t *testing.T) {
 	repo := new(mocks.UserData)
+	usecase := New(repo, validator.New())
 	insertData := domain.User{}
 
 	t.Run("success get group id", func(t *testing.T) {
-		repo.On("GetGroupID", mock.Anything).Return("m4nt4p", nil).Once()
-
-		usecase := New(repo, validator.New())
-		err := usecase.GetGroupID(insertData)
-		assert.Nil(t, err)
+		repo.On("GetGroupID", mock.Anything).Return("m4nt4p").Once()
+		groupID := usecase.GetGroupID(insertData)
+		assert.Equal(t, groupID, "m4nt4p")
 		repo.AssertExpectations(t)
 	})
 }
