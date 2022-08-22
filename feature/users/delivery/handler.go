@@ -61,6 +61,11 @@ func (uh *userHandler) InsertUser() echo.HandlerFunc {
 				"code":    400,
 				"message": "Invalid Phone",
 			})
+		} else if tmp.Password == "" {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": "Invalid Password",
+			})
 		}
 
 		_, err := uh.userUsecase.AddUser(tmp.ToModel())
@@ -68,7 +73,7 @@ func (uh *userHandler) InsertUser() echo.HandlerFunc {
 			log.Println("Cannot proces data", err)
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    400,
-				"message": err.Error(),
+				"message": "username or email or Telephone Number Already Exist",
 			})
 		} else if err != nil {
 			log.Println(err)
