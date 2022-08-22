@@ -20,6 +20,7 @@ import (
 
 func TestAddUser(t *testing.T) {
 	repo := new(mocks.UserData)
+	usecase := New(repo, validator.New())
 	insertData := domain.User{
 		ID:       1,
 		Username: "admin",
@@ -28,108 +29,23 @@ func TestAddUser(t *testing.T) {
 		Password: "12345678",
 	}
 
-	t.Run("success add user", func(t *testing.T) {
-		repo.On("Insert", mock.Anything).Return(1, nil).Once()
+	t.Run("duplicate data", func(t *testing.T) {
+		repo.On("CheckDuplicate", insertData).Return(true).Once()
+		data, err := usecase.AddUser(insertData)
+		assert.Equal(t, 0, data)
+		assert.EqualError(t, err, "username or email already registered")
+		repo.AssertExpectations(t)
+	})
 
-		usecase := New(repo, validator.New())
-		res, err := usecase.AddUser(insertData)
+	t.Run("success add user", func(t *testing.T) {
+		repo.On("CheckDuplicate", mock.Anything).Return(false).Once()
+		repo.On("Insert", mock.Anything).Return(1, nil).Once()
+		data, err := usecase.AddUser(insertData)
+		assert.Equal(t, 1, data)
 		assert.Nil(t, err)
-		assert.Equal(t, 1, res)
 		repo.AssertExpectations(t)
 	})
 }
-
-// func TestAddUser(t *testing.T) {
-// 	repo := new(mocks.UserData)
-// 	insertData := domain.User{
-// 		ID:       1,
-// 		Username: "admin",
-// 		Email:    "admin@min.com",
-// 		Phone:    "08123456789",
-// 		Password: "12345678",
-// 	}
-
-// 	t.Run("Success Insert", func(t *testing.T) {
-// 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
-
-// 		useCase := New(repo, validator.New())
-
-// 		res, err := useCase.AddUser(insertData)
-// 		assert.Nil(t, err)
-// 		assert.Equal(t, 1, res)
-// 		repo.AssertExpectations(t)
-// 	})
-
-// 	t.Run("Duplicated Data", func(t *testing.T) {
-// 		repo.On("Insert", mock.Anything).Return(0, gorm.ErrRegistered).Once()
-
-// 		useCase := New(repo, validator.New())
-
-// 		row, err := useCase.AddUser(insertData)
-// 		assert.NotNil(t, err)
-// 		assert.Equal(t, -4, row)
-// 		repo.AssertExpectations(t)
-// 	})
-
-// 	t.Run("Error from server", func(t *testing.T) {
-// 		repo.On("Insert", mock.Anything).Return(0, gorm.ErrInvalidValueOfLength).Once()
-
-// 		useCase := New(repo, validator.New())
-
-// 		res, err := useCase.AddUser(insertData)
-// 		assert.NotNil(t, err)
-// 		assert.Equal(t, -4, res)
-// 		repo.AssertExpectations(t)
-// 	})
-
-// 	t.Run("Empty Username", func(t *testing.T) {
-// 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
-
-// 		useCase := New(repo, validator.New())
-// 		dummy := insertData
-// 		dummy.Username = ""
-// 		res, err := useCase.AddUser(dummy)
-// 		assert.NotNil(t, err)
-// 		assert.EqualError(t, err, errors.New("invalid username").Error())
-// 		assert.Equal(t, -1, res)
-// 	})
-
-// 	t.Run("Empty Password", func(t *testing.T) {
-// 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
-
-// 		useCase := New(repo, validator.New())
-// 		dummy := insertData
-// 		dummy.Password = ""
-// 		res, err := useCase.AddUser(dummy)
-// 		assert.NotNil(t, err)
-// 		assert.EqualError(t, err, errors.New("invalid password").Error())
-// 		assert.Equal(t, -1, res)
-// 	})
-
-// 	t.Run("Empty Phone", func(t *testing.T) {
-// 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
-
-// 		useCase := New(repo, validator.New())
-// 		dummy := insertData
-// 		dummy.Phone = ""
-// 		res, err := useCase.AddUser(dummy)
-// 		assert.NotNil(t, err)
-// 		assert.EqualError(t, err, errors.New("invalid phone number").Error())
-// 		assert.Equal(t, -1, res)
-// 	})
-
-// 	t.Run("Empty Email", func(t *testing.T) {
-// 		repo.On("Insert", mock.Anything).Return(1, nil).Once()
-
-// 		useCase := New(repo, validator.New())
-// 		dummy := insertData
-// 		dummy.Email = ""
-// 		res, err := useCase.AddUser(dummy)
-// 		assert.NotNil(t, err)
-// 		assert.EqualError(t, err, errors.New("invalid Email").Error())
-// 		assert.Equal(t, -1, res)
-// 	})
-// }
 
 func TestLoginUser(t *testing.T) {
 	repo := new(mocks.UserData)
@@ -199,11 +115,20 @@ func TestUpdateUser(t *testing.T) {
 		Phone:      "08123456789",
 	}
 
-	t.Run("Success Update", func(t *testing.T) {
-		repo.On("Update", mock.Anything, mock.Anything).Return(1, nil).Once()
-		res, err := useCase.UpdateUser(int(insertData.ID), insertData)
+	t.Run("Duplicate Data", func(t *testing.T) {
+		repo.On("CheckDuplicate", insertData).Return(true).Once()
+		data, err := useCase.UpdateUser(1, insertData)
+		assert.EqualError(t, err, "username or email already registered")
+		assert.Equal(t, 0, data)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("success update", func(t *testing.T) {
+		repo.On("CheckDuplicate", insertData).Return(false).Once()
+		repo.On("Update", 1, insertData).Return(1, nil).Once()
+		data, err := useCase.UpdateUser(1, insertData)
 		assert.Nil(t, err)
-		assert.Equal(t, 1, res)
+		assert.Equal(t, 1, data)
 		repo.AssertExpectations(t)
 	})
 }
