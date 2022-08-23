@@ -79,9 +79,10 @@ func (ud *userUsecase) DeleteUser(id int) (row int, err error) {
 		if err == gorm.ErrRecordNotFound {
 			return row, errors.New("record not found")
 		} else {
-			return row, errors.New("failed to delete user")
+			return row, err
 		}
 	}
+
 	return row, nil
 }
 

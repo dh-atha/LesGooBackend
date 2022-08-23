@@ -85,6 +85,13 @@ func (ud *userData) GetSpecific(userID int) (domain.User, error) {
 }
 
 func (ud *userData) Delete(userID int) (row int, err error) {
+	var userData domain.User
+	userData.ID = uint(userID)
+	groupID := ud.GetGroupID(userData)
+	if groupID != "" {
+		return 0, errors.New("leave group before deleting your account")
+	}
+
 	res := ud.db.Delete(&User{}, userID)
 	if res.Error != nil {
 		log.Println("Cannot delete data", res.Error.Error())
