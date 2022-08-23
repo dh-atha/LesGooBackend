@@ -107,21 +107,52 @@ func (ud *userData) Logout(userID uint) error {
 }
 
 func (ud *userData) CheckDuplicate(newUser domain.User) (bool, error) {
-	var user = FromModel(newUser)
-	err := ud.db.Find(&user, "username = ?", newUser.Username)
-	if err.RowsAffected >= 1 {
-		log.Println("Invalid Username", err.Error)
-		return true, errors.New("Invalid Username")
-	}
-	err = ud.db.Find(&user, "email = ?", newUser.Email)
-	if err.RowsAffected >= 1 {
-		log.Println("Invalid Email", err.Error)
-		return true, errors.New("Invalid Email")
-	}
-	err = ud.db.Find(&user, "phone = ?", newUser.Phone)
-	if err.RowsAffected >= 1 {
-		log.Println("Invalid Phone", err.Error)
-		return true, errors.New("Invalid Phone")
+	var res *gorm.DB
+	if newUser.ID == 0 {
+		res = ud.db.Find(&User{}, "username = ?", newUser.Username)
+		if res.RowsAffected >= 1 {
+			log.Println("Invalid Username", res.Error)
+			return true, errors.New("Invalid Username")
+		}
+		res = ud.db.Find(&User{}, "email = ?", newUser.Email)
+		if res.RowsAffected >= 1 {
+			log.Println("Invalid Email", res.Error)
+			return true, errors.New("Invalid Email")
+		}
+		res = ud.db.Find(&User{}, "phone = ?", newUser.Phone)
+		if res.RowsAffected >= 1 {
+			log.Println("Invalid Phone", res.Error)
+			return true, errors.New("Invalid Phone")
+		}
+	} else {
+		var user User
+		ud.db.Where("id = ?", newUser.ID).First(&user)
+		log.Println(user)
+		log.Println(user.Username != newUser.Username && newUser.Username != "")
+		log.Println(user.Email != newUser.Email && newUser.Email != "")
+		log.Println(user.Phone != newUser.Phone && newUser.Phone != "")
+		if user.Username != newUser.Username && newUser.Username != "" {
+			res = ud.db.Where("username = ?", newUser.Username).Find(&User{})
+			if res.RowsAffected >= 1 {
+				log.Println("Invalid Username", res.Error)
+				return true, errors.New("Invalid Username")
+			}
+		}
+		if user.Email != newUser.Email && newUser.Email != "" {
+			res = ud.db.Where("email = ?", newUser.Email).Find(&User{})
+			log.Println(res.RowsAffected)
+			if res.RowsAffected >= 1 {
+				log.Println("Invalid Email", res.Error)
+				return true, errors.New("Invalid Email")
+			}
+		}
+		if user.Phone != newUser.Phone && newUser.Phone != "" {
+			res = ud.db.Where("phone = ?", newUser.Phone).Find(&User{})
+			if res.RowsAffected >= 1 {
+				log.Println("Invalid Phone", res.Error)
+				return true, errors.New("Invalid Phone")
+			}
+		}
 	}
 
 	return false, nil
