@@ -177,7 +177,7 @@ func (uh *userHandler) UpdateUser() echo.HandlerFunc {
 			log.Println("Cannot proces data", err)
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"code":    400,
-				"message": "Invalid Username",
+				"message": err.Error(),
 				"data":    data,
 			})
 		}
