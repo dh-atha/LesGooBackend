@@ -1,5 +1,5 @@
 # LesGoo
-<img src="LesGoo.png">
+<img src="image/LesGoo.png">
 
 <!-- ABOUT THE PROJECT -->
 
@@ -21,10 +21,10 @@ LesGoo is a real-time location tracker with a chatting feature. The author's des
 ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
 ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
-
+<img src="image/Tech.png">
 ## 🏎️ ERD 📍
 
-<img src="ERD.png">
+<img src="image/ERD.png">
 
 ## Run Locally
 
