@@ -136,17 +136,11 @@ Several commands make use of Locations features, as shown below.
 
 ## Authors 👑
 
--   Faza Muttaqien
+-   Faza Muttaqien  [![GitHub](https://img.shields.io/badge/faza-muttaqien-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/faza-muttaqien)
 
-    Reach me:[![GitHub](https://img.shields.io/badge/faza-muttaqien-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/faza-muttaqien)
+-   Atha Dhaiffathin [![GitHub](https://img.shields.io/badge/dh-atha-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dh-atha)
 
--   Atha Dhaiffathin
-
-    Reach me:[![GitHub](https://img.shields.io/badge/dh-atha-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dh-atha)
-
--   Faqih Assyfa Poedjiono
-
-    Reach me:[![GitHub](https://img.shields.io/badge/faqihassyfa-%23121011.svg?style=for-the-badge&logo=github&logoColor=red)](https://github.com/faqihassyfa)
+-   Faqih Assyfa Poedjiono  [![GitHub](https://img.shields.io/badge/faqihassyfa-%23121011.svg?style=for-the-badge&logo=github&logoColor=red)](https://github.com/faqihassyfa)
 
  <p align="right">(<a href="#top">back to top</a>)</p>
 <h3>
