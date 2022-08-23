@@ -1,4 +1,5 @@
 # LesGoo
+<img src="image/LesGoo.png">
 
 <!-- ABOUT THE PROJECT -->
 
@@ -20,10 +21,10 @@ LesGoo is a real-time location tracker with a chatting feature. The author's des
 ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
 ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
-
+<img src="image/Tech.png">
 ## 🏎️ ERD 📍
 
-<img src="ERD4.drawio.png">
+<img src="image/ERD.png">
 
 ## Run Locally
 
@@ -43,10 +44,10 @@ Go to the project directory
 
 If you're interested in using our Open Api, this is an example of how to do so.
 
-```bash
-https://virtserver.swaggerhub.com/faqihassyfa/LesGoo/1.0.0
-```
-
+Final Project Capstone Program Immersive Alterra Academy
+<br />
+<a href="https://app.swaggerhub.com/apis-docs/faqihassyfa/LesGoo/1.0.0"><strong>Go to Open API »</strong></a>
+<br />
 <div>
       <details>
 <summary>👶 Users</summary>
@@ -135,23 +136,11 @@ Several commands make use of Locations features, as shown below.
 
 ## Authors 👑
 
--   Faza Muttaqien
+-   Faza Muttaqien  [![GitHub](https://img.shields.io/badge/faza-muttaqien-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/faza-muttaqien)
 
-    Reach me:
+-   Atha Dhaiffathin [![GitHub](https://img.shields.io/badge/dh-atha-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dh-atha)
 
-    [![GitHub](https://img.shields.io/badge/faza-muttaqien-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/faza-muttaqien)
-
--   Atha Dhaiffathin
-
-    Reach me:
-
-    [![GitHub](https://img.shields.io/badge/dh-atha-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dh-atha)
-
--   Faqih Assyfa Poedjiono
-
-    Reach me:
-
-    [![GitHub](https://img.shields.io/badge/faqihassyfa-%23121011.svg?style=for-the-badge&logo=github&logoColor=red)](https://github.com/faqihassyfa)
+-   Faqih Assyfa Poedjiono  [![GitHub](https://img.shields.io/badge/faqihassyfa-%23121011.svg?style=for-the-badge&logo=github&logoColor=red)](https://github.com/faqihassyfa)
 
  <p align="right">(<a href="#top">back to top</a>)</p>
 <h3>
