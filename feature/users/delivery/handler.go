@@ -220,6 +220,12 @@ func (uh *userHandler) DeleteUser() echo.HandlerFunc {
 		}
 		_, errDel := uh.userUsecase.DeleteUser(id)
 		if errDel != nil {
+			if errDel.Error() == "leave group before deleting your account" {
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{
+					"code":    400,
+					"message": errDel.Error(),
+				})
+			}
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 				"code":    500,
 				"message": "internal server error",
