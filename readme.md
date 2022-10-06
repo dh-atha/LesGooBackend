@@ -138,7 +138,7 @@ Several commands make use of Locations features, as shown below.
 
 -   Faza Muttaqien  [![GitHub](https://img.shields.io/badge/faza-muttaqien-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/faza-muttaqien)
 
--   Atha Dhaiffathin [![GitHub](https://img.shields.io/badge/dh-atha-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dh-atha)
+-  Atha Dhaiffathin [![GitHub](https://img.shields.io/badge/dh-atha-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dh-atha)
 
 -   Faqih Assyfa Poedjiono  [![GitHub](https://img.shields.io/badge/faqihassyfa-%23121011.svg?style=for-the-badge&logo=github&logoColor=red)](https://github.com/faqihassyfa)
 
